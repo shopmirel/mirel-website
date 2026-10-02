@@ -2759,7 +2759,8 @@
     const linkRaw = (p.connectedTo != null ? p.connectedTo : (p['Connected To'] != null ? p['Connected To'] : p.connected));
     if(dropRaw != null && String(dropRaw).trim() !== '') div.dataset.drop = String(dropRaw).trim().toLowerCase();
     if(linkRaw != null) div.dataset.links = Array.isArray(linkRaw) ? linkRaw.join(',') : String(linkRaw);
-    if(p.salePrice) div.dataset.scratched = p.price;
+    // Cross out the old price only when there really is a higher original price to cross out
+    if(p.salePrice && p.price && p.price > p.salePrice) div.dataset.scratched = p.price;
 
     // Size Type in Notion — forgiving about naming:
     //   anything with "fit" in it  -> full 4-measurement fitted sizing
