@@ -26,6 +26,33 @@ const PRODUCT_STATUS_MAP = {
   delivered: 'Delivered'
 };
 
+// Only this account may change an order's status (it's done from the admin panel).
+const ADMIN_EMAIL = 'get.mirel@gmail.com';
+// Public Firebase web key (the same one already in the site's HTML) — only used to
+// check a sign-in token, it grants no access on its own.
+const FIREBASE_API_KEY = process.env.FIREBASE_API_KEY || 'AIzaSyDjzRdYk5GaJ-UmLr80rCqdjjGno7rW4Do';
+
+// Notion rejects text longer than 2000 characters, so keep everything under that.
+const clip = (v) => String(v == null ? '' : v).slice(0, 1900);
+
+async function isAdmin(event) {
+  const header = (event.headers && (event.headers.authorization || event.headers.Authorization)) || '';
+  const token = header.startsWith('Bearer ') ? header.slice(7) : '';
+  if (!token) return false;
+  try {
+    const r = await fetch(`https://identitytoolkit.googleapis.com/v1/accounts:lookup?key=${FIREBASE_API_KEY}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ idToken: token })
+    });
+    if (!r.ok) return false;
+    const u = ((await r.json()).users || [])[0];
+    return !!u && u.emailVerified === true && String(u.email || '').toLowerCase() === ADMIN_EMAIL;
+  } catch (e) {
+    return false;
+  }
+}
+
 exports.handler = async function (event) {
   if (event.httpMethod !== 'POST') {
     return { statusCode: 405, body: 'Method Not Allowed' };
@@ -64,15 +91,15 @@ exports.handler = async function (event) {
       }
 
       const properties = {
-        'Customer Name': { title: [{ text: { content: customerName || 'Guest' } }] },
-        'Order ID': { rich_text: [{ text: { content: String(orderId) } }] },
-        'Items': { rich_text: [{ text: { content: item.name } }] },
+        'Customer Name': { title: [{ text: { content: clip(customerName) || 'Guest' } }] },
+        'Order ID': { rich_text: [{ text: { content: clip(orderId) } }] },
+        'Items': { rich_text: [{ text: { content: clip(item.name) } }] },
         'Total': { number: Number(item.price) || 0 },
-        'Phone': { rich_text: [{ text: { content: phone || '' } }] },
-        'Address': { rich_text: [{ text: { content: address || '' } }] },
+        'Phone': { rich_text: [{ text: { content: clip(phone) } }] },
+        'Address': { rich_text: [{ text: { content: clip(address) } }] },
         'product Status': { select: { name: 'New' } },
         'order Status': { select: { name: 'ordered' } },
-        'Payment Status': { select: { name: 'Paid' } },
+        'Payment Status': { select: { name: data.paid === false ? 'Unpaid' : 'Paid' } },
         'Order Date': timestamp ? { date: { start: timestamp } } : undefined
       };
       Object.keys(properties).forEach(k => properties[k] === undefined && delete properties[k]);
@@ -92,7 +119,13 @@ exports.handler = async function (event) {
       // Status change — find every row that shares this Order ID and update
       // all of them, since one order can be several rows (one per product).
       const { statusKey } = data;
-      const productStatusOption = PRODUCT_STATUS_MAP[statusKey] || 'New';
+      if (!(await isAdmin(event))) {
+        return { statusCode: 403, body: 'Only the admin can change order status.' };
+      }
+      const productStatusOption = PRODUCT_STATUS_MAP[statusKey];
+      if (!productStatusOption) {
+        return { statusCode: 400, body: 'Unknown status.' };
+      }
 
       const searchRes = await fetch(`https://api.notion.com/v1/databases/${NOTION_DATABASE_ID}/query`, {
         method: 'POST',
@@ -101,6 +134,9 @@ exports.handler = async function (event) {
           filter: { property: 'Order ID', rich_text: { equals: String(orderId) } }
         })
       });
+      if (!searchRes.ok) {
+        return { statusCode: 502, body: `Notion search failed: ${await searchRes.text()}` };
+      }
       const searchData = await searchRes.json();
       const pages = searchData.results || [];
       if (!pages.length) {

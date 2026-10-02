@@ -34,6 +34,19 @@ function plainText(richTextArray) {
   return (richTextArray || []).map((t) => t.plain_text).join('');
 }
 
+// Reads a Notion property as plain text, whatever type it was made as
+// (Number, Text, Title, Select) — so "Drop Number" and "Connected To" work
+// even if the column type is slightly different from what's expected.
+function propToText(prop) {
+  if (!prop) return '';
+  if (typeof prop.number === 'number') return String(prop.number);
+  if (prop.rich_text) return plainText(prop.rich_text);
+  if (prop.title) return plainText(prop.title);
+  if (prop.select && prop.select.name) return prop.select.name;
+  if (prop.multi_select) return prop.multi_select.map((o) => o.name).join(',');
+  return '';
+}
+
 function filesToUrls(filesProp) {
   return ((filesProp && filesProp.files) || [])
     .map((f) => (f.file ? f.file.url : f.external ? f.external.url : null))
@@ -61,7 +74,13 @@ exports.handler = async function () {
           'Notion-Version': NOTION_VERSION,
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ page_size: 100, start_cursor: cursor }),
+        // Only in-stock rows leave Notion, so hidden products can never be seen
+        // by opening this function's address directly.
+        body: JSON.stringify({
+          page_size: 100,
+          start_cursor: cursor,
+          filter: { property: 'In Stock', checkbox: { equals: true } },
+        }),
       });
 
       if (!res.ok) {
@@ -86,8 +105,10 @@ exports.handler = async function () {
         const images = [1, 2, 3, 4, 5].flatMap((n) => filesToUrls(p['Image ' + n]));
         const name = plainText(p.Name && p.Name.title);
         if (!name || !images.length) continue; // matches the frontend's own requirement
+        if (!(p.Price && typeof p.Price.number === 'number')) continue; // no price = don't show
 
         products.push({
+          id: page.id,
           name,
           description: plainText(p.Description && p.Description.rich_text),
           price: p.Price && typeof p.Price.number === 'number' ? p.Price.number : null,
@@ -96,6 +117,8 @@ exports.handler = async function () {
           sizeType: (p['Size Type'] && p['Size Type'].select && p['Size Type'].select.name) || '',
           inStock: !!(p['In Stock'] && p['In Stock'].checkbox),
           images,
+          dropNumber: propToText(p['Drop Number']),
+          connectedTo: propToText(p['Connected To']),
         });
       }
 
@@ -104,7 +127,13 @@ exports.handler = async function () {
 
     return {
       statusCode: 200,
-      headers: { 'Content-Type': 'application/json', 'Cache-Control': 'no-store' },
+      headers: {
+        'Content-Type': 'application/json',
+        'Cache-Control': 'public, max-age=0, must-revalidate',
+        // Fast for visitors: Netlify keeps a copy for 60s (and refreshes it quietly in the
+        // background), so Notion isn't asked on every single visit.
+        'Netlify-CDN-Cache-Control': 'public, s-maxage=60, stale-while-revalidate=300',
+      },
       body: JSON.stringify({ products }),
     };
   } catch (err) {
