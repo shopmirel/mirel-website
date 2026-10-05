@@ -122,8 +122,9 @@ exports.handler = async function (event) {
       if (!(await isAdmin(event))) {
         return { statusCode: 403, body: 'Only the admin can change order status.' };
       }
+      const isCancel = statusKey === 'cancel';   // "Undo" in the admin Add-order panel
       const productStatusOption = PRODUCT_STATUS_MAP[statusKey];
-      if (!productStatusOption) {
+      if (!productStatusOption && !isCancel) {
         return { statusCode: 400, body: 'Unknown status.' };
       }
 
@@ -139,6 +140,20 @@ exports.handler = async function (event) {
       }
       const searchData = await searchRes.json();
       const pages = searchData.results || [];
+      if (isCancel) {
+        // Move every row of this order to Notion's trash (restorable from Notion for a while).
+        const gone = await Promise.all(pages.map(p =>
+          fetch(`https://api.notion.com/v1/pages/${p.id}`, {
+            method: 'PATCH',
+            headers: notionHeaders,
+            body: JSON.stringify({ archived: true })
+          })
+        ));
+        if (gone.some(r => !r.ok)) {
+          return { statusCode: 502, body: 'Some Notion rows could not be removed.' };
+        }
+        return { statusCode: 200, body: JSON.stringify({ ok: true, removed: pages.length }) };
+      }
       if (!pages.length) {
         return { statusCode: 404, body: 'No Notion rows found for this order yet — was it created before Order ID existed on the database?' };
       }

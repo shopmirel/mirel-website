@@ -105,11 +105,9 @@ exports.handler = async function () {
         const images = [1, 2, 3, 4, 5].flatMap((n) => filesToUrls(p['Image ' + n]));
         const name = plainText(p.Name && p.Name.title);
         if (!name || !images.length) continue; // matches the frontend's own requirement
-        // Needs at least ONE price (Price or Sale Price) to be shown. A row with only a
-        // Sale Price is fine — that's simply its selling price.
-        const hasPrice = p.Price && typeof p.Price.number === 'number';
-        const hasSale = p['Sale Price'] && typeof p['Sale Price'].number === 'number';
-        if (!hasPrice && !hasSale) continue; // no price at all = don't show
+        // Needs at least one price (Price or Sale Price); rows with neither are skipped.
+        const hasPrice = (p.Price && typeof p.Price.number === 'number') || (p['Sale Price'] && typeof p['Sale Price'].number === 'number');
+        if (!hasPrice) continue;
 
         products.push({
           id: page.id,
