@@ -1269,21 +1269,29 @@
   // One row per product: called once per item on creation, so a 3-item order
   // makes 3 Notion rows, all sharing the same Order ID.
   function syncNewItemToNotion(orderId, customerName, phone, address, item, timestamp, paid){
-    fetch('/.netlify/functions/notion-sync', {
+    // Resolves true/false so callers can tell the admin when Notion didn't get the row.
+    return fetch('/.netlify/functions/notion-sync', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ orderId, isNewOrder: true, item, customerName, phone, address, timestamp, paid })
-    }).catch(() => {});
+    }).then(async (r) => {
+      if(!r.ok) console.warn('Notion sync failed:', r.status, await r.text());
+      return r.ok;
+    }).catch((e) => { console.warn('Notion sync failed:', e); return false; });
   }
   async function syncStatusToNotion(orderId, statusKey){
     try {
       if(!auth.currentUser) return;
       const token = await auth.currentUser.getIdToken();
-      await fetch('/.netlify/functions/notion-sync', {
+      const r = await fetch('/.netlify/functions/notion-sync', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
         body: JSON.stringify({ orderId, isNewOrder: false, statusKey })
       });
+      if(!r.ok && statusKey !== 'cancel'){
+        console.warn('Notion status update failed:', r.status, await r.text());
+        toast("Saved on the site, but Notion didn't update ⋆");
+      }
     } catch(e) {}
   }
 
@@ -1539,7 +1547,7 @@
     } else {
       bagItemsEl.innerHTML = [...bag.entries()].map(([key, item]) => `
         <div class="bag-item">
-          <img src="${imgFor(item.title, item.img, item.base)}" alt="${item.title}" style="width:52px;height:52px;object-fit:cover;border-radius:4px;flex-shrink:0;">
+          <img src="${imgFor(item.title, item.img, item.base)}" alt="${item.title}" style="width:52px;height:52px;object-fit:cover;border-radius:16px;flex-shrink:0;box-shadow:0 5px 12px rgba(143,97,105,0.25);">
           <div style="flex:1;">
             <div class="name">${item.title}${item.qty > 1 ? ' x' + item.qty : ''}</div>
             <div class="price">₹${inr(item.unitPrice * item.qty)}</div>
@@ -2303,7 +2311,7 @@
     const subtotal = bagSubtotal();
     const delivery = deliveryFor(subtotal);
     const total = subtotal + delivery;   // what the customer actually pays
-    const items = [...bag.values()].map(it => ({name: it.title + (it.qty > 1 ? ` x${it.qty}` : ''), price: String(it.unitPrice * it.qty)}));
+    const items = [...bag.values()].map(it => ({name: it.title + (it.qty > 1 ? ` x${it.qty}` : ''), price: String(it.unitPrice * it.qty), product: it.base || ''}));
     const payError = document.getElementById('payError');
     const payBtn = document.getElementById('payBtn');
     payError.style.display = 'none';
@@ -2425,6 +2433,14 @@
   });
 
   // ---- My Orders ----
+  // Finds the shop photo for an ordered item: by the product it was made from, or (older orders)
+  // by its name with the size / "x2" part removed. No photo (product gone from the shop) -> a soft letter tile.
+  function orderImg(it){
+    const name = String((it && it.name) || '');
+    const tries = [it && it.product, name.replace(/\s+x\d+$/, '').replace(/\s*\([^)]*\)\s*$/, ''), name];
+    for(const t of tries){ if(t && liveImages[t]) return liveImages[t]; }
+    return '';
+  }
   function renderMyOrders(){
     const body = document.getElementById('ordersBody');
     if(!currentUser){ body.innerHTML = '<div class="bag-empty">Sign in to see your orders ⋆</div>'; return; }
@@ -2440,11 +2456,16 @@
         const status = o.status || 'ordered';
         const statusText = (ORDER_STATUSES.find(s => s.key === status) || {}).label || 'Ordered';
         (o.items || []).forEach(it => {
+          const photo = orderImg(it);
+          const tile = photo
+            ? `<img src="${escHtml(photo)}" alt="" style="width:64px;height:64px;object-fit:cover;border-radius:16px;flex-shrink:0;box-shadow:0 6px 14px rgba(143,97,105,0.22);">`
+            : `<div aria-hidden="true" style="width:64px;height:64px;border-radius:16px;flex-shrink:0;background:rgba(185,143,151,0.28);display:flex;align-items:center;justify-content:center;font-family:'Cormorant Garamond',serif;font-style:italic;font-size:26px;color:var(--accent);">${escHtml(String(it.name || '?').charAt(0).toUpperCase())}</div>`;
           cards.push(`<div class="bag-item" style="align-items:flex-start;">
+            ${tile}
             <div style="flex:1;">
-              <div class="name">${it.name}</div>
-              <div class="price">₹${it.price}</div>
-              <div style="font-size:11px; color:var(--ink-soft); margin-top:4px;">Ordered ${when} · Order total ₹${o.total}</div>
+              <div class="name">${escHtml(it.name)}</div>
+              <div class="price">₹${inr(it.price)}</div>
+              <div style="font-size:11px; color:var(--ink-soft); margin-top:4px;">Ordered ${when} · Order total ₹${inr(o.total)}</div>
               <div class="order-status-badge${status === 'delivered' ? ' delivered' : ''}">${statusText}</div>
               ${status === 'delivered' ? `<button class="bag-item-move" data-note-order="${escHtml(o.key)}" data-note-name="${escHtml(it.name)}" style="display:block; margin-top:10px;">Leave a note ⋆</button>` : ''}
             </div>
@@ -2698,14 +2719,14 @@
       const phone = ph.val() || '';
       const orderId = db.ref('orders').push().key;
       const timestamp = new Date().toISOString();
-      const items = [{ name: itemName, price }];
+      const items = [{ name: itemName, price, product: prod ? prod.name : '' }];
       await db.ref().update({
         ['orders/' + orderId]: { items, total: price, customer: { name: custName, phone, email }, userId: uid, timestamp, paid, status: 'ordered' },
         ['users/' + uid + '/orders/' + orderId]: { items, total: price, name: custName, email, timestamp, status: 'ordered' },
         ['adminRecent/' + orderId]: { itemName, price, email, uid, createdAt: timestamp }
       });
-      syncNewItemToNotion(orderId, custName, phone, '', { name: itemName, price }, timestamp, paid);
-      say(`Added: ${itemName} for ${email} ⋆`);
+      const notionOk = await syncNewItemToNotion(orderId, custName, phone, '', { name: itemName, price }, timestamp, paid);
+      say(notionOk ? `Added: ${itemName} for ${email} ⋆` : `Added for ${email}, but it did NOT reach Notion. Undo it and add it again after checking Notion.`, !notionOk);
       ['aoSize','aoColor','aoPrice','aoEmail','aoOther'].forEach(id => { aoEl(id).value = ''; });
       sel.value = ''; sel.dispatchEvent(new Event('change'));
       aoLoadRecent();
