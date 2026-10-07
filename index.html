@@ -201,6 +201,10 @@
   .bag-empty{ font-size:13px; color:var(--ink-soft); text-align:center; margin-top:40px; font-style:italic; font-family:'Cormorant Garamond',serif; }
   .bag-panel-foot{ padding:20px 24px 26px; border-top:1px solid var(--line); }
   .bag-total{ display:flex; justify-content:space-between; font-size:13px; margin-bottom:16px; font-weight:600; }
+  .ao-radio{ display:flex; align-items:center; gap:10px; font-family:'Montserrat',sans-serif; font-size:12.5px; color:var(--ink); cursor:pointer; }
+  .ao-radio input{ accent-color:var(--accent); width:16px; height:16px; margin:0; }
+  .ao-radio.disabled{ opacity:.45; cursor:not-allowed; }
+  .ao-saved{ background:#fff; border-radius:20px; padding:12px 18px; box-shadow:0 6px 16px rgba(143,97,105,0.18), 0 1px 4px rgba(143,97,105,0.12); font-family:'Cormorant Garamond',serif; font-style:italic; font-size:15px; color:var(--ink); line-height:1.35; }
   .bag-line{ display:flex; justify-content:space-between; font-size:12.5px; color:var(--ink-soft); margin-bottom:9px; }
   .delivery-nudge{ background:#fff; border-radius:22px; padding:13px 18px 14px; margin-bottom:16px; box-shadow:0 6px 16px rgba(143,97,105,0.18), 0 1px 4px rgba(143,97,105,0.12); font-family:'Montserrat',sans-serif; font-size:11.5px; letter-spacing:.3px; color:var(--ink-soft); text-align:center; }
   .delivery-nudge b{ color:var(--accent); font-weight:600; }
@@ -717,7 +721,23 @@
       <input id="aoColor" class="mirel-input" type="text" maxlength="60" placeholder="Colour (optional)">
       <input id="aoPrice" class="mirel-input" type="number" min="0" step="1" placeholder="Price ₹ (what you agreed)">
       <input id="aoEmail" class="mirel-input" type="email" maxlength="120" placeholder="Customer's email">
-      <label style="font-family:'Montserrat',sans-serif; font-size:12px; color:var(--ink-soft); display:flex; align-items:center; gap:8px;"><input id="aoPaid" type="checkbox" checked> Already paid</label>
+      <div style="font-family:'Montserrat',sans-serif; font-size:11px; letter-spacing:1.4px; text-transform:uppercase; color:var(--ink-soft); margin-top:6px;">Address</div>
+      <div id="aoAddrStatus" style="font-family:'Montserrat',sans-serif; font-size:12px; color:var(--ink-soft); min-height:16px;">Type the customer's email above and I'll check if they've saved an address ⋆</div>
+      <label class="ao-radio disabled" id="aoSavedLabel"><input type="radio" name="aoAddrMode" id="aoModeSaved" value="saved" disabled> Use their saved address</label>
+      <div id="aoSavedText" class="ao-saved" style="display:none;"></div>
+      <label class="ao-radio"><input type="radio" name="aoAddrMode" id="aoModeManual" value="manual"> Type the address here</label>
+      <div id="aoAddrForm" style="display:none; flex-direction:column; gap:12px;">
+        <input id="aoAName" class="mirel-input" type="text" maxlength="80" placeholder="Name for delivery (optional)">
+        <input id="aoAPhone" class="mirel-input" type="tel" maxlength="20" placeholder="Phone (optional)">
+        <input id="aoDoor" class="mirel-input" type="text" maxlength="60" placeholder="Door / flat number">
+        <input id="aoAddress" class="mirel-input" type="text" maxlength="200" placeholder="Address">
+        <input id="aoLandmark" class="mirel-input" type="text" maxlength="80" placeholder="Landmark (optional)">
+        <input id="aoPin" class="mirel-input" type="text" inputmode="numeric" maxlength="6" placeholder="Pin code">
+        <p id="aoPinNote" style="display:none; font-size:11px; margin:-4px 0 0 6px; font-family:'Montserrat',sans-serif;"></p>
+        <input id="aoCity" class="mirel-input" type="text" maxlength="60" placeholder="City">
+        <input id="aoState" class="mirel-input" type="text" maxlength="60" placeholder="State">
+      </div>
+      <label style="font-family:'Montserrat',sans-serif; font-size:12px; color:var(--ink-soft); display:flex; align-items:center; gap:8px;"><input id="aoPaid" type="checkbox"> Already paid</label>
       <button class="bag-send" id="aoAdd" type="button" style="border:none; cursor:pointer;">Add to their orders</button>
       <div id="aoMsg" style="font-family:'Montserrat',sans-serif; font-size:12.5px; color:var(--ink-soft); min-height:18px;"></div>
     </div>
@@ -751,7 +771,7 @@
     <textarea id="noteText" class="mirel-input" rows="6" maxlength="1000" placeholder="How did it turn out? The fit, the yarn, the feel…" style="border-radius:22px; resize:vertical;"></textarea>
     <div id="notePhotos" style="display:flex; flex-wrap:wrap; gap:10px; margin:16px 0 8px;"></div>
     <label class="note-photo-btn">+ Add photos (up to 3)<input type="file" id="notePhotoInput" accept="image/*" multiple hidden></label>
-    <div style="font-size:11px; color:var(--ink-soft); opacity:.75; margin:16px 0 20px; line-height:1.6;">Your note appears on the site once Mirel approves it ⋆</div>
+    <div style="height:20px;"></div>
     <button class="bag-send" id="noteSubmit" type="button" style="width:100%; border:none; cursor:pointer; font-family:'Montserrat',sans-serif;">Send note</button>
   </div>
 </div>
@@ -1041,17 +1061,18 @@
         </div>
         <button type="button" id="acctAddressAddBtn" class="bag-item-move">+ Add address</button>
         <div id="acctAddressForm" style="display:none; margin-top:12px;">
-          <div class="checkout-field"><label>Door / flat number</label><input type="text" id="acctDoor"></div>
-          <div class="checkout-field"><label>Address</label><textarea rows="2" id="acctAddress"></textarea></div>
+          <div class="checkout-field"><label>Door / flat number *</label><input type="text" id="acctDoor"></div>
+          <div class="checkout-field"><label>Address *</label><textarea rows="2" id="acctAddress"></textarea></div>
           <div class="checkout-row">
             <div class="checkout-field"><label>Landmark</label><input type="text" id="acctLandmark"></div>
-            <div class="checkout-field" style="max-width:140px;"><label>Pin code</label><input type="text" id="acctPin" inputmode="numeric" maxlength="6"></div>
+            <div class="checkout-field" style="max-width:140px;"><label>Pin code *</label><input type="text" id="acctPin" inputmode="numeric" maxlength="6"></div>
           </div>
           <p id="acctPinNote" style="display:none; font-size:11px; margin:-6px 0 14px 4px; font-family:'Montserrat',sans-serif;"></p>
           <div class="checkout-row">
             <div class="checkout-field"><label>City</label><input type="text" id="acctCity"></div>
             <div class="checkout-field"><label>State</label><input type="text" id="acctState"></div>
           </div>
+          <p id="acctAddrError" role="alert" style="display:none; margin:0 0 12px 6px; font-size:12px; font-family:'Montserrat',sans-serif; color:var(--error);"></p>
           <button type="button" id="acctAddressSave" class="bag-send" style="width:100%; border:none; cursor:pointer; font-family:'Montserrat',sans-serif;">Save Address</button>
         </div>
       </div>
@@ -2103,7 +2124,7 @@
         timestamp: new Date().toISOString()
       });
       closeNote();
-      toast('Thank you — your note will appear once approved ⋆');
+      toast('Thank you for your note ⋆');
     } catch(err){
       toast("Couldn't send that just now — please try again ⋆");
     }
@@ -2656,6 +2677,90 @@
       '<option value="__other">Not in the shop (type a name)</option>';
     sel._prods = prods;
   }
+  // ---- Address for an admin-added order: their saved one, or typed here ----
+  let aoAddr = { email: '', uid: null, phone: '', name: '', address: null };
+  let aoCheckSeq = 0, aoCheckTimer = null;
+  const AO_EMAIL_OK = /^[^\s@\/#$\[\]]+@[^\s@\/#$\[\]]+\.[^\s@\/#$\[\]]+$/;
+  function aoSetMode(mode){
+    aoEl('aoModeSaved').checked = mode === 'saved';
+    aoEl('aoModeManual').checked = mode === 'manual';
+    aoEl('aoAddrForm').style.display = mode === 'manual' ? 'flex' : 'none';
+  }
+  function aoSavedAvailable(on){
+    aoEl('aoModeSaved').disabled = !on;
+    aoEl('aoSavedLabel').classList.toggle('disabled', !on);
+    if(!on) aoEl('aoSavedText').style.display = 'none';
+  }
+  function aoResetAddress(){
+    aoCheckSeq++;
+    aoAddr = { email: '', uid: null, phone: '', name: '', address: null };
+    aoSavedAvailable(false);
+    aoSetMode('');
+    ['aoAName','aoAPhone','aoDoor','aoAddress','aoLandmark','aoPin','aoCity','aoState'].forEach(id => { aoEl(id).value = ''; });
+    aoEl('aoPinNote').style.display = 'none';
+    aoEl('aoAddrStatus').style.color = 'var(--ink-soft)';
+    aoEl('aoAddrStatus').textContent = "Type the customer's email above and I'll check if they've saved an address ⋆";
+  }
+  async function aoCheckAddress(){
+    const email = aoEl('aoEmail').value.trim().toLowerCase();
+    const status = aoEl('aoAddrStatus');
+    const say = (t, bad) => { status.textContent = t; status.style.color = bad ? 'var(--error)' : 'var(--ink-soft)'; };
+    if(!AO_EMAIL_OK.test(email)){
+      aoCheckSeq++;
+      aoAddr = { email: '', uid: null, phone: '', name: '', address: null };
+      aoSavedAvailable(false);
+      if(aoEl('aoModeSaved').checked) aoSetMode('');
+      say("Type the customer's email above and I'll check if they've saved an address ⋆");
+      return;
+    }
+    const seq = ++aoCheckSeq;
+    say('Checking their account…');
+    try{
+      const found = await db.ref('emailIndex').orderByChild('email').equalTo(email).once('value');
+      let uid = null; found.forEach(ch => { uid = ch.key; });
+      if(seq !== aoCheckSeq) return;
+      if(!uid){
+        aoAddr = { email, uid: null, phone: '', name: '', address: null };
+        aoSavedAvailable(false);
+        say("No Mirel account for that email yet. They need to sign in once on the site first.", true);
+        return;
+      }
+      const [a, ph, nm] = await Promise.all([
+        db.ref('users/' + uid + '/address').once('value'),
+        db.ref('users/' + uid + '/phone').once('value'),
+        db.ref('users/' + uid + '/name').once('value')
+      ]);
+      if(seq !== aoCheckSeq) return;
+      const addr = a.val();
+      aoAddr = { email, uid, phone: ph.val() || '', name: nm.val() || '', address: addr && (addr.address || addr.pin) ? addr : null };
+      if(aoAddr.address){
+        aoEl('aoSavedText').textContent = addressTextFor(aoAddr.address);
+        aoEl('aoSavedText').style.display = 'block';
+        aoSavedAvailable(true);
+        aoEl('aoSavedText').style.display = 'block';
+        aoSetMode('saved');
+        say('Saved address found ⋆');
+      } else {
+        aoSavedAvailable(false);
+        aoSetMode('manual');
+        aoEl('aoAPhone').value = aoEl('aoAPhone').value || aoAddr.phone;
+        say("They haven't saved an address on their account yet. Type it below, or ask them to add one in their Account.");
+      }
+    } catch(err){
+      if(seq !== aoCheckSeq) return;
+      say("Couldn't check their account (" + (err.code || err.message) + ").", true);
+    }
+  }
+  aoEl('aoEmail').addEventListener('input', () => { clearTimeout(aoCheckTimer); aoCheckTimer = setTimeout(aoCheckAddress, 450); });
+  aoEl('aoEmail').addEventListener('change', aoCheckAddress);
+  ['aoModeSaved','aoModeManual'].forEach(id => aoEl(id).addEventListener('change', () => aoSetMode(aoEl('aoModeSaved').checked ? 'saved' : 'manual')));
+  aoEl('aoPin').addEventListener('input', () => {
+    const pin = aoEl('aoPin');
+    pin.value = pin.value.replace(/\D/g, '').slice(0, 6);
+    if(pin.value.length === 6) lookupPin(pin.value, aoEl('aoCity'), aoEl('aoState'), aoEl('aoPinNote'));
+    else aoEl('aoPinNote').style.display = 'none';
+  });
+
   aoEl('aoProduct').addEventListener('change', () => {
     const sel = aoEl('aoProduct');
     const other = sel.value === '__other';
@@ -2666,7 +2771,7 @@
     aoEl('aoPreview').style.display = p ? 'flex' : 'none';
     if(p){ aoEl('aoPreviewImg').src = p.img; aoEl('aoPreviewDesc').textContent = p.desc; }
   });
-  document.getElementById('addOrderLink').addEventListener('click', (e) => { e.preventDefault(); aoFillProducts(); aoLoadRecent(); });
+  document.getElementById('addOrderLink').addEventListener('click', (e) => { e.preventDefault(); aoFillProducts(); aoLoadRecent(); aoResetAddress(); });
 
   async function aoLoadRecent(){
     if(!currentUser || currentUser.email !== ADMIN_EMAIL) return;
@@ -2707,6 +2812,23 @@
     if(!base){ say('Pick a product (or choose Other and type a name).', true); return; }
     if(priceRaw === '' || !isFinite(price) || price < 0){ say('Enter the price you agreed.', true); return; }
     if(!/^[^\s@\/#$\[\]]+@[^\s@\/#$\[\]]+\.[^\s@\/#$\[\]]+$/.test(email)){ say("That email doesn't look right.", true); return; }
+    // An order can't be added without an address: their saved one, or one typed here.
+    const addrMode = aoEl('aoModeSaved').checked ? 'saved' : (aoEl('aoModeManual').checked ? 'manual' : '');
+    let addrObj = null;
+    if(addrMode === 'saved'){
+      if(!aoAddr.address || aoAddr.email !== email){ say('Give me a second to finish checking their address, or type one in.', true); return; }
+      addrObj = Object.assign({}, aoAddr.address);
+    } else if(addrMode === 'manual'){
+      addrObj = {
+        door: aoEl('aoDoor').value.trim(), address: aoEl('aoAddress').value.trim(), landmark: aoEl('aoLandmark').value.trim(),
+        city: aoEl('aoCity').value.trim(), state: aoEl('aoState').value.trim(), pin: aoEl('aoPin').value.trim()
+      };
+      if(!addrObj.address){ say('Type the address.', true); return; }
+      if(!/^\d{6}$/.test(addrObj.pin)){ say('Type the 6-digit pin code.', true); return; }
+      if(!addrObj.city || !addrObj.state){ say('City and state are needed (they fill in from the pin code).', true); return; }
+    } else {
+      say("Choose an address: their saved one, or type it here.", true); return;
+    }
     btn.disabled = true; say('Adding…');
     try{
       const found = await db.ref('emailIndex').orderByChild('email').equalTo(email).once('value');
@@ -2715,20 +2837,22 @@
       const parts = [size, color].filter(Boolean).join(', ');
       const itemName = base + (parts ? ` (${parts})` : '');
       const [nm, ph] = await Promise.all([db.ref('users/' + uid + '/name').once('value'), db.ref('users/' + uid + '/phone').once('value')]);
-      const custName = nm.val() || email.split('@')[0];
-      const phone = ph.val() || '';
+      const custName = (addrMode === 'manual' && aoEl('aoAName').value.trim()) || nm.val() || email.split('@')[0];
+      const phone = (addrMode === 'manual' && aoEl('aoAPhone').value.trim()) || ph.val() || '';
       const orderId = db.ref('orders').push().key;
       const timestamp = new Date().toISOString();
       const items = [{ name: itemName, price, product: prod ? prod.name : '' }];
       await db.ref().update({
-        ['orders/' + orderId]: { items, total: price, customer: { name: custName, phone, email }, userId: uid, timestamp, paid, status: 'ordered' },
+        ['orders/' + orderId]: { items, total: price, customer: Object.assign({ name: custName, phone, email }, addrObj), userId: uid, timestamp, paid, status: 'ordered' },
         ['users/' + uid + '/orders/' + orderId]: { items, total: price, name: custName, email, timestamp, status: 'ordered' },
         ['adminRecent/' + orderId]: { itemName, price, email, uid, createdAt: timestamp }
       });
-      const notionOk = await syncNewItemToNotion(orderId, custName, phone, '', { name: itemName, price }, timestamp, paid);
+      const notionOk = await syncNewItemToNotion(orderId, custName, phone, addressTextFor(addrObj), { name: itemName, price }, timestamp, paid);
       say(notionOk ? `Added: ${itemName} for ${email} ⋆` : `Added for ${email}, but it did NOT reach Notion. Undo it and add it again after checking Notion.`, !notionOk);
       ['aoSize','aoColor','aoPrice','aoEmail','aoOther'].forEach(id => { aoEl(id).value = ''; });
       sel.value = ''; sel.dispatchEvent(new Event('change'));
+      aoEl('aoPaid').checked = false;
+      aoResetAddress();
       aoLoadRecent();
     } catch(err){
       say("Couldn't add that (" + (err.code || err.message) + ").", true);
@@ -2843,7 +2967,7 @@
   document.getElementById('profilePhone').addEventListener('change', () => {
     if(!currentUser) return;
     currentPhone = document.getElementById('profilePhone').value.trim();
-    db.ref('users/' + currentUser.uid + '/phone').set(currentPhone);
+    db.ref('users/' + currentUser.uid + '/phone').set(currentPhone).catch(err => toast("Couldn't save your phone (" + (err.code || err.message) + ")"));
   });
   document.getElementById('acctAddressAddBtn').addEventListener('click', () => {
     document.getElementById('acctAddressForm').style.display = 'block';
@@ -2860,8 +2984,20 @@
       document.getElementById('acctState').value = currentAddress.state || '';
     }
   });
+  ['acctDoor','acctAddress','acctPin'].forEach(id => document.getElementById(id).addEventListener('input', () => { document.getElementById('acctAddrError').style.display = 'none'; }));
   document.getElementById('acctAddressSave').addEventListener('click', () => {
     if(!currentUser) return;
+    // Door number, address and a 6-digit pin code are required.
+    const need = !document.getElementById('acctDoor').value.trim() ? ['acctDoor', 'Please add your door / flat number.']
+      : !document.getElementById('acctAddress').value.trim() ? ['acctAddress', 'Please add your address.']
+      : !/^\d{6}$/.test(document.getElementById('acctPin').value.trim()) ? ['acctPin', 'Please add your 6-digit pin code.']
+      : null;
+    if(need){
+      const errEl = document.getElementById('acctAddrError');
+      errEl.textContent = need[1]; errEl.style.display = 'block';
+      document.getElementById(need[0]).focus();
+      return;
+    }
     const addr = {
       door: document.getElementById('acctDoor').value.trim(),
       address: document.getElementById('acctAddress').value.trim(),
@@ -2870,10 +3006,11 @@
       pin: document.getElementById('acctPin').value.trim(),
       state: document.getElementById('acctState').value.trim()
     };
-    currentAddress = addr;
-    db.ref('users/' + currentUser.uid + '/address').set(addr);
-    renderAccountExtras();
-    toast('Address saved ⋆');
+    db.ref('users/' + currentUser.uid + '/address').set(addr).then(() => {
+      currentAddress = addr;
+      renderAccountExtras();
+      toast('Address saved ⋆');
+    }).catch(err => toast("Couldn't save your address (" + (err.code || err.message) + ")"));
   });
 
   // Remember the last email typed here, so a returning visitor doesn't retype it
