@@ -95,11 +95,11 @@ exports.handler = async function (event) {
         'Order ID': { rich_text: [{ text: { content: clip(orderId) } }] },
         'Items': { rich_text: [{ text: { content: clip(item.name) } }] },
         'Total': { number: Number(item.price) || 0 },
-        'Phone': { rich_text: [{ text: { content: clip(phone) } }] },
+        'Phone': { phone_number: clip(phone) || null },
         'Address': { rich_text: [{ text: { content: clip(address) } }] },
         'product Status': { select: { name: 'New' } },
         'order Status': { select: { name: 'ordered' } },
-        'Payment Status': { select: { name: data.paid === false ? 'Unpaid' : 'Paid' } },
+        'Payment Status': { select: { name: data.paid === false ? 'Pending' : 'Paid' } },
         'Order Date': timestamp ? { date: { start: timestamp } } : undefined
       };
       Object.keys(properties).forEach(k => properties[k] === undefined && delete properties[k]);
