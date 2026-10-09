@@ -173,6 +173,15 @@
   }
   .order-status-btn:hover{ border-color:var(--accent); }
   .order-status-btn.active{ background:var(--ink); color:var(--cream); border-color:var(--ink); }
+  .by-me-dot{ position:absolute; top:16px; right:16px; width:10px; height:10px; border-radius:50%; background:var(--accent); box-shadow:0 0 0 4px rgba(110,46,54,0.14); }
+  .verify-pill{ padding:12px 34px; border:1px solid var(--line); border-radius:30px; background:#fff; font-family:'Montserrat',sans-serif; font-size:11px; letter-spacing:1.5px; text-transform:uppercase; cursor:pointer; color:var(--ink); transition:border-color .2s ease; }
+  .verify-pill:hover{ border-color:var(--accent); }
+  .verify-pill:disabled{ opacity:.5; cursor:default; }
+  .verify-link{ background:none; border:none; padding:6px; font-family:'Montserrat',sans-serif; font-size:12px; color:var(--ink-soft); text-decoration:underline; cursor:pointer; }
+  .verify-link:hover{ color:var(--accent); }
+  .order-del-btn{ margin-left:auto; background:none; border:1px solid var(--line); border-radius:30px; padding:8px 16px; font-family:'Montserrat',sans-serif; font-size:11px; letter-spacing:1.5px; text-transform:uppercase; cursor:pointer; color:var(--error); transition:background .2s ease, border-color .2s ease; }
+  .order-del-btn:hover{ border-color:var(--error); background:rgba(164,80,63,0.08); }
+  .order-del-btn:disabled{ opacity:.5; cursor:default; }
   .order-status-badge{
     display:inline-block; font-family:'Montserrat',sans-serif; font-size:9.5px; letter-spacing:0.6px; text-transform:uppercase;
     padding:5px 12px; border-radius:20px; background:rgba(110,46,54,0.08); color:var(--accent); margin-top:6px;
@@ -445,10 +454,24 @@
   }
 
   .kind-words{ background:var(--cream); }
-  .testi-viewport{ max-width:900px; margin:0 auto; }
-  .testi-grid{ display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:24px; }
-  .testi{ background:var(--bg); border-radius:24px; padding:36px 28px; box-shadow:0 14px 30px rgba(36,20,23,0.18), 0 4px 10px rgba(36,20,23,0.12); display:flex; flex-direction:column; justify-content:center; min-height:200px; }
-  .testi img{ width:100%; height:auto; border-radius:14px; margin-bottom:16px; display:block; }
+  /* Reviews strip: fixed-size cards. If they all fit on the screen they stay still and centred;
+     if not, the strip loops sideways by itself (phone and desktop alike). */
+  .testi-viewport{ max-width:1100px; margin:0 auto; --tw:320px; --tg:24px; }
+  .testi-grid{ display:flex; flex-wrap:nowrap; justify-content:center; gap:var(--tg); }
+  .testi{ background:var(--bg); border-radius:24px; padding:28px 24px; box-shadow:0 14px 30px rgba(36,20,23,0.18), 0 4px 10px rgba(36,20,23,0.12); display:flex; flex-direction:column; justify-content:center; width:var(--tw); flex:0 0 auto; min-height:200px; }
+  .testi.has-photo{ justify-content:flex-start; }
+  .testi.has-photo .who{ margin-top:auto; }
+  .testi img{ width:100%; aspect-ratio:5/4; object-fit:cover; border-radius:16px; margin-bottom:16px; display:block; }
+  .testi-viewport.moving{ overflow:hidden; padding:6px 0 44px; margin-bottom:-30px; -webkit-mask-image:linear-gradient(to right, transparent, #000 5%, #000 95%, transparent); mask-image:linear-gradient(to right, transparent, #000 5%, #000 95%, transparent); }
+  .testi-viewport.moving .testi-grid{ justify-content:flex-start; width:max-content; padding-right:var(--tg); animation:testi-scroll var(--dur,28s) linear infinite; }
+  .testi-viewport.moving .testi.dup{ display:flex; }
+  .testi-viewport.moving:hover .testi-grid, .testi-viewport.moving:active .testi-grid{ animation-play-state:paused; }
+  @media(max-width:820px){ .testi-viewport{ --tw:250px; --tg:20px; max-width:100%; } }
+  @media(prefers-reduced-motion:reduce){
+    .testi-viewport.moving{ overflow-x:auto; -webkit-mask-image:none; mask-image:none; }
+    .testi-viewport.moving .testi-grid{ animation:none; }
+    .testi-viewport.moving .testi.dup{ display:none; }
+  }
   .testi p{ font-family:'Cormorant Garamond', serif; font-style:italic; font-size:17px; line-height:1.7; color:#fff; margin-bottom:14px; }
   .testi .who{ font-size:10px; letter-spacing:1.8px; text-transform:uppercase; color:rgba(255,255,255,0.8); }
   .exch-msg{ font-family:'Cormorant Garamond',serif; font-style:italic; font-size:14.5px; line-height:1.55; color:var(--ink-soft); margin-top:8px; }
@@ -463,7 +486,6 @@
   .note-thumb button{ position:absolute; top:-6px; right:-6px; width:22px; height:22px; border-radius:50%; border:1px solid var(--line); background:var(--cream); color:var(--ink); font-size:13px; line-height:1; cursor:pointer; }
   .testi.dup{ display:none; }
   .testi p{ display:-webkit-box; -webkit-line-clamp:6; -webkit-box-orient:vertical; overflow:hidden; }
-  @media(min-width:821px){ .testi-grid .testi:nth-child(n+4){ display:none; } }
   .review-card{ background:var(--bg); border-radius:24px; padding:30px 26px; box-shadow:0 14px 30px rgba(36,20,23,0.18), 0 4px 10px rgba(36,20,23,0.12); break-inside:avoid; margin-bottom:24px; }
   .review-card p{ font-family:'Cormorant Garamond', serif; font-style:italic; font-size:18px; line-height:1.7; color:#fff; margin-bottom:14px; }
   .review-card .who{ font-size:10px; letter-spacing:1.8px; text-transform:uppercase; color:rgba(255,255,255,0.8); }
@@ -473,15 +495,26 @@
   .reviews-columns{ column-count:3; column-gap:24px; }
   @media(max-width:980px){ .reviews-columns{ column-count:2; } }
   @media(max-width:600px){ .reviews-columns{ column-count:1; } }
-  @media(max-width:820px){
-    .testi-grid.few{ animation:none; width:auto; flex-wrap:wrap; justify-content:center; }
-  }
-  @media(max-width:820px){
-    .testi-viewport{ overflow:hidden; max-width:100%; }
-    .testi-grid{ display:flex; flex-wrap:nowrap; width:max-content; gap:20px; animation:testi-scroll 28s linear infinite; }
-    .testi-grid .testi{ width:230px; flex:0 0 auto; min-height:180px; }
-    .testi.dup{ display:flex; }
-  }
+  /* Star ratings: dark translucent outline stars that fill with gold up to the rating */
+  .stars{ position:relative; display:inline-block; line-height:0; vertical-align:middle; font-size:15px; }
+  .st-row{ display:inline-flex; gap:.12em; }
+  .st-row svg{ width:1em; height:1em; display:block; flex:0 0 auto; }
+  .st-base path{ fill:rgba(36,20,23,.14); stroke:rgba(36,20,23,.4); stroke-width:1.2; stroke-linejoin:round; }
+  .st-fill{ position:absolute; left:0; top:0; overflow:hidden; }
+  .st-fill path{ fill:#D9A441; stroke:#C48E2F; stroke-width:1.2; stroke-linejoin:round; }
+  .rate-num{ font-family:'Montserrat',sans-serif; font-size:12.5px; font-weight:500; letter-spacing:.4px; color:var(--ink); margin-left:7px; vertical-align:middle; }
+  .card-rating{ display:flex; align-items:center; margin:-2px 0 8px; }
+  .card-rating:empty{ display:none; }
+  .pd-rating{ display:flex; align-items:center; margin:2px 0 10px; font-size:17px; }
+  .pd-rating:empty{ display:none; }
+  .testi-stars, .rev-stars{ margin:0 0 10px; font-size:14px; line-height:0; }
+  .rate-label{ font-family:'Montserrat',sans-serif; font-size:10.5px; letter-spacing:1.4px; text-transform:uppercase; color:var(--ink-soft); margin:0 0 8px; }
+  .rate-pick{ display:flex; gap:6px; margin:0 0 18px; }
+  .rate-pick button{ background:none; border:none; padding:2px; cursor:pointer; line-height:0; }
+  .rate-pick svg{ width:34px; height:34px; display:block; }
+  .rate-pick path{ fill:rgba(36,20,23,.12); stroke:rgba(36,20,23,.4); stroke-width:1.2; stroke-linejoin:round; transition:fill .15s ease, stroke .15s ease; }
+  .rate-pick button.on path{ fill:#D9A441; stroke:#C48E2F; }
+  .rate-pick button:hover path{ stroke:#C48E2F; }
   @keyframes testi-scroll{ from{ transform:translateX(0); } to{ transform:translateX(-50%); } }
 
   footer{ background:var(--ink); color:var(--cream); padding:74px 6% 34px; text-align:center; }
@@ -647,7 +680,7 @@
     <a href="mailto:get.mirel@gmail.com">Mail</a>
     <a href="#" id="footerTermsLink">Terms</a>
   </div>
-  <div class="fine">mirel, handmade craft — Bangalore <a href="#" id="adminLink" style="display:none;">· Admin</a> <a href="#" id="reviewsAdminLink" style="display:none;">· Notes</a> <a href="#" id="exchAdminLink" style="display:none;">· Exchanges</a> <a href="#" id="insightsLink" style="display:none;">· Insights</a> <a href="#" id="addOrderLink" style="display:none;">· Add order</a></div>
+  <div class="fine">mirel, handmade craft — Bangalore <a href="#" id="adminLink" style="display:none;">· Orders</a> <a href="#" id="reviewsAdminLink" style="display:none;">· Add Review</a> <a href="#" id="exchAdminLink" style="display:none;">· Exchanges</a> <a href="#" id="insightsLink" style="display:none;">· Insights</a> <a href="#" id="addOrderLink" style="display:none;">· Add order</a></div>
 </footer>
 
 <div class="bag-backdrop" id="adminBackdrop"></div>
@@ -719,7 +752,7 @@
       </div>
       <input id="aoSize" class="mirel-input" type="text" maxlength="60" placeholder="Size (optional)">
       <input id="aoColor" class="mirel-input" type="text" maxlength="60" placeholder="Colour (optional)">
-      <input id="aoPrice" class="mirel-input" type="number" min="0" step="1" placeholder="Price ₹ (what you agreed)">
+      <input id="aoPrice" class="mirel-input" type="text" inputmode="numeric" autocomplete="off" maxlength="7" placeholder="Price ₹ (what you agreed)">
       <input id="aoEmail" class="mirel-input" type="email" maxlength="120" placeholder="Customer's email">
       <div style="font-family:'Montserrat',sans-serif; font-size:11px; letter-spacing:1.4px; text-transform:uppercase; color:var(--ink-soft); margin-top:6px;">Address</div>
       <div id="aoAddrStatus" style="font-family:'Montserrat',sans-serif; font-size:12px; color:var(--ink-soft); min-height:16px;">Type the customer's email above and I'll check if they've saved an address ⋆</div>
@@ -740,10 +773,6 @@
       <label style="font-family:'Montserrat',sans-serif; font-size:12px; color:var(--ink-soft); display:flex; align-items:center; gap:8px;"><input id="aoPaid" type="checkbox"> Already paid</label>
       <button class="bag-send" id="aoAdd" type="button" style="border:none; cursor:pointer;">Add to their orders</button>
       <div id="aoMsg" style="font-family:'Montserrat',sans-serif; font-size:12.5px; color:var(--ink-soft); min-height:18px;"></div>
-    </div>
-    <div style="margin-top:28px; border-top:1px solid var(--line); padding-top:18px; max-width:720px;">
-      <div class="serif" style="font-family:'Cormorant Garamond',serif; font-style:italic; font-size:22px; margin-bottom:6px;">Added in the last 24 hours</div>
-      <div id="aoRecent"></div>
     </div>
   </div>
 </div>
@@ -768,6 +797,8 @@
   <div class="bag-items" id="noteBody" style="display:block;">
     <div id="noteProduct" style="font-family:'Cormorant Garamond',serif; font-style:italic; font-size:18px; color:var(--ink-soft); margin-bottom:6px;"></div>
     <div id="noteAs" style="font-size:10.5px; letter-spacing:1.4px; text-transform:uppercase; color:var(--ink-soft); opacity:.75; margin-bottom:18px;"></div>
+    <div class="rate-label">How would you rate it?</div>
+    <div class="rate-pick" id="noteStars" role="radiogroup" aria-label="Your rating"><button type="button" data-v="1" role="radio" aria-checked="false" aria-label="1 star"><svg viewBox="0 0 24 24"><path d="M12 2.5l2.94 6.1 6.56.9-4.8 4.6 1.2 6.6L12 17.4l-5.9 3.3 1.2-6.6-4.8-4.6 6.56-.9z"/></svg></button><button type="button" data-v="2" role="radio" aria-checked="false" aria-label="2 stars"><svg viewBox="0 0 24 24"><path d="M12 2.5l2.94 6.1 6.56.9-4.8 4.6 1.2 6.6L12 17.4l-5.9 3.3 1.2-6.6-4.8-4.6 6.56-.9z"/></svg></button><button type="button" data-v="3" role="radio" aria-checked="false" aria-label="3 stars"><svg viewBox="0 0 24 24"><path d="M12 2.5l2.94 6.1 6.56.9-4.8 4.6 1.2 6.6L12 17.4l-5.9 3.3 1.2-6.6-4.8-4.6 6.56-.9z"/></svg></button><button type="button" data-v="4" role="radio" aria-checked="false" aria-label="4 stars"><svg viewBox="0 0 24 24"><path d="M12 2.5l2.94 6.1 6.56.9-4.8 4.6 1.2 6.6L12 17.4l-5.9 3.3 1.2-6.6-4.8-4.6 6.56-.9z"/></svg></button><button type="button" data-v="5" role="radio" aria-checked="false" aria-label="5 stars"><svg viewBox="0 0 24 24"><path d="M12 2.5l2.94 6.1 6.56.9-4.8 4.6 1.2 6.6L12 17.4l-5.9 3.3 1.2-6.6-4.8-4.6 6.56-.9z"/></svg></button></div>
     <textarea id="noteText" class="mirel-input" rows="6" maxlength="1000" placeholder="How did it turn out? The fit, the yarn, the feel…" style="border-radius:22px; resize:vertical;"></textarea>
     <div id="notePhotos" style="display:flex; flex-wrap:wrap; gap:10px; margin:16px 0 8px;"></div>
     <label class="note-photo-btn">+ Add photos (up to 3)<input type="file" id="notePhotoInput" accept="image/*" multiple hidden></label>
@@ -779,7 +810,7 @@
 <div class="bag-backdrop" id="reviewsAdminBackdrop"></div>
 <div class="bag-panel" id="reviewsAdminPanel" style="width:100vw; max-width:100vw; padding:40px 6%;">
   <div class="bag-panel-head">
-    <div class="serif" style="font-size:28px;">Notes</div>
+    <div class="serif" style="font-size:28px;">Add Review</div>
     <button id="reviewsAdminClose" aria-label="Close">&times;</button>
   </div>
   <div class="bag-items" id="reviewsAdminBody">
@@ -800,6 +831,7 @@
         <div id="pdSizes"></div>
         <div id="pdSizeWarning" style="display:none; color:var(--error); font-size:11.5px; font-family:'Montserrat',sans-serif; margin-top:6px;">Please select a size before adding to the bag ⋆</div>
         <div class="price" id="pdPrice"></div>
+        <div class="pd-rating" id="pdRating"></div>
         <div class="pd-meta">
           <div class="stock">In stock</div>
           <div>Ships from Bangalore</div>
@@ -1043,6 +1075,19 @@
       <button type="submit" style="padding:12px 0; background:var(--ink); color:var(--cream); border:none; border-radius:4px; font-size:11px; letter-spacing:2px; text-transform:uppercase; cursor:pointer;">Continue</button>
       <div style="font-size:11px; color:var(--ink-soft); text-align:center; opacity:.75;">New here? Just enter an email and password — your account is created automatically.</div>
     </form>
+    <div id="verifyBox" style="display:none; flex-direction:column; align-items:center; gap:14px; text-align:center; padding-top:6px;">
+      <div class="serif" id="verifyTitle" style="font-size:24px; line-height:1.3;">Verify your email</div>
+      <div id="verifyMsg" style="font-size:12.5px; color:var(--ink-soft); line-height:1.6;"></div>
+      <button type="button" id="verifyResend" class="verify-pill">Resend link</button>
+      <button type="button" id="verifyRestart" class="verify-link">Wrong email? Start again</button>
+      <div style="width:100%; display:flex; flex-direction:column; gap:14px;">
+      <div style="text-align:center; font-size:10px; letter-spacing:1px; color:var(--ink-soft); opacity:.7;">— or —</div>
+      <button type="button" id="googleBtn2" style="display:flex; align-items:center; justify-content:center; gap:10px; padding:12px 0; border:1px solid var(--line); border-radius:30px; background:#fff; font-size:12.5px; letter-spacing:0.5px; cursor:pointer; font-family:'Montserrat',sans-serif;">
+        <svg width="16" height="16" viewBox="0 0 24 24"><path fill="#4285F4" d="M23.5 12.3c0-.8-.1-1.6-.2-2.3H12v4.5h6.4c-.3 1.5-1.1 2.7-2.4 3.6v3h3.9c2.3-2.1 3.6-5.2 3.6-8.8Z"/><path fill="#34A853" d="M12 24c3.2 0 5.9-1.1 7.9-2.9l-3.9-3c-1.1.7-2.4 1.2-4 1.2-3.1 0-5.7-2.1-6.6-4.9H1.4v3.1C3.4 21.3 7.4 24 12 24Z"/><path fill="#FBBC05" d="M5.4 14.4c-.2-.7-.4-1.5-.4-2.4s.1-1.6.4-2.4V6.5H1.4C.5 8.2 0 10 0 12s.5 3.8 1.4 5.5l4-3.1Z"/><path fill="#EA4335" d="M12 4.8c1.7 0 3.3.6 4.5 1.8l3.4-3.4C17.9 1.2 15.2 0 12 0 7.4 0 3.4 2.7 1.4 6.5l4 3.1C6.3 6.9 8.9 4.8 12 4.8Z"/></svg>
+        Continue with Google
+      </button>
+      </div>
+    </div>
     <div id="profileLoggedIn" style="display:none; text-align:center; padding-top:10px;">
       <div style="width:56px; height:56px; border-radius:50%; background:var(--ink); color:var(--cream); display:flex; align-items:center; justify-content:center; font-family:'Cormorant Garamond',serif; font-style:italic; font-size:24px; margin:0 auto 16px;" id="profileInitial"></div>
       <div class="serif" style="font-size:19px; margin-bottom:4px;" id="profileName"></div>
@@ -1125,6 +1170,37 @@
 (async function mirelMain(){
   // Prices shown with Indian commas (1400 -> 1,400). Raw numbers stay in data attributes.
   function inr(n){ return Number(n).toLocaleString('en-IN'); }
+  // ---- Star ratings ----
+  const STAR_PATH = 'M12 2.5l2.94 6.1 6.56.9-4.8 4.6 1.2 6.6L12 17.4l-5.9 3.3 1.2-6.6-4.8-4.6 6.56-.9z';
+  var ratingsMap = {};   // productRatings from Firebase: key -> { sum, n }  (the count is never shown)
+  function productBase(name){ return String(name || '').replace(/\s+x\d+$/, '').replace(/\s*\([^)]*\)\s*$/, '').trim(); }
+  function ratingKey(name){ return encodeURIComponent(productBase(name).toLowerCase()).replace(/\./g, '%2E'); }
+  function starsHtml(value, withNumber){
+    const v = Math.max(0, Math.min(5, Number(value) || 0));
+    const full = Math.floor(v), frac = v - full;
+    const row = ('<svg viewBox="0 0 24 24" aria-hidden="true"><path d="' + STAR_PATH + '"/></svg>').repeat(5);
+    const fillEm = full * 1.12 + (full < 5 ? frac : 0);
+    return '<span class="stars" role="img" aria-label="Rated ' + v.toFixed(1) + ' out of 5"><span class="st-row st-base">' + row + '</span><span class="st-row st-fill" style="width:' + fillEm.toFixed(3) + 'em">' + row + '</span></span>' +
+      (withNumber ? '<span class="rate-num">' + v.toFixed(1) + '</span>' : '');
+  }
+  function applyRatings(){
+    document.querySelectorAll('#grid .card').forEach(card => {
+      const r = ratingsMap[ratingKey(card.querySelector('h3').textContent)];
+      const box = card.querySelector('.card-rating');
+      if(r && r.n > 0 && r.sum > 0){ const avg = r.sum / r.n; card.dataset.rating = avg.toFixed(2); if(box) box.innerHTML = starsHtml(avg, true); }
+      else { delete card.dataset.rating; if(box) box.innerHTML = ''; }
+    });
+  }
+  function loadRatings(){ db.ref('productRatings').once('value').then(snap => { ratingsMap = snap.val() || {}; applyRatings(); }).catch(() => {}); }
+  // Admin only: add/remove one rating in a product's running total.
+  async function bumpRating(productName, rating, delta){
+    const r = Number(rating);
+    if(!productName || !(r >= 1 && r <= 5)) return;
+    await db.ref('productRatings/' + ratingKey(productName)).transaction(cur => {
+      const sum = ((cur && cur.sum) || 0) + delta * r, n = ((cur && cur.n) || 0) + delta;
+      return n > 0 ? { sum, n } : null;
+    });
+  }
   // Fresh product photos from Notion (its own upload links expire after ~1 hour,
   // so saved bag/keepsake links can go stale — we always prefer the fresh one).
   var liveImages = {};
@@ -1191,8 +1267,40 @@
     ])
       .then(sections => { body.innerHTML = sections.join(''); })
       .catch(err => {
-        body.innerHTML = `<p style="font-family:'Montserrat',sans-serif; font-size:12.5px; color:var(--error);">Couldn't load insights (${err.code || err.message}). Check that the "wishlistCounts" and "cartAddCounts" rules have been added to your Firebase rules.</p>`;
+        body.innerHTML = `<p style="font-family:'Montserrat',sans-serif; font-size:12.5px; color:var(--error);">Couldn't load insights (${err.code || err.message}). Your database permissions may need updating for the insights data.</p>`;
       });
+  }
+
+  // Removes an order from everywhere it lives: the admin list, the customer's own orders,
+  // any exchange requests / pending reviews tied to it, and the Notion rows.
+  async function deleteOrderEverywhere(orderId, userId){
+    const updates = { ['orders/' + orderId]: null, ['adminRecent/' + orderId]: null };
+    if(userId) updates['users/' + userId + '/orders/' + orderId] = null;
+    const [ex, rv] = await Promise.all([db.ref('exchangeRequests').once('value'), db.ref('reviewsPending').once('value')]);
+    ex.forEach(c => {
+      const v = c.val() || {};
+      if(v.orderKey === orderId || c.key.indexOf(orderId + '_') === 0){
+        updates['exchangeRequests/' + c.key] = null;
+        const owner = v.userId || userId;
+        if(owner) updates['users/' + owner + '/exchanges/' + c.key] = null;
+      }
+    });
+    rv.forEach(c => { if((c.val() || {}).orderKey === orderId) updates['reviewsPending/' + c.key] = null; });
+    if(userId){
+      const ux = await db.ref('users/' + userId + '/exchanges').once('value');
+      ux.forEach(c => { if((c.val() || {}).orderKey === orderId) updates['users/' + userId + '/exchanges/' + c.key] = null; });
+    }
+    await db.ref().update(updates);
+    // Notion last: if it fails the order is already gone from the site, and we say so.
+    try{
+      const token = await auth.currentUser.getIdToken();
+      const r = await fetch('/.netlify/functions/notion-sync', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
+        body: JSON.stringify({ orderId, isNewOrder: false, statusKey: 'cancel' })
+      });
+      return r.ok;
+    } catch(e){ return false; }
   }
 
   function renderAdminOrders(){
@@ -1213,15 +1321,34 @@
           const items = (o.items || []).map(i => `${escHtml(i.name)} (₹${escHtml(i.price)})`).join(', ');
           const when = o.timestamp ? new Date(o.timestamp).toLocaleString() : '';
           const status = o.status || 'ordered';
-          const statusBtns = ORDER_STATUSES.map(s => `<button type="button" class="order-status-btn${s.key === status ? ' active' : ''}" data-order="${o.key}" data-user="${escHtml(o.userId || '')}" data-status="${s.key}">${s.label}</button>`).join('');
-          return `<div style="border:1px solid var(--line); border-radius:14px; padding:18px; background:#fff;">
-            <div class="name" style="font-size:15px; margin-bottom:6px;">${escHtml(c.name || 'Guest')} — ₹${escHtml(o.total)}</div>
+          const statusBtns = ORDER_STATUSES.map(s => `<button type="button" class="order-status-btn${s.key === status ? ' active' : ''}" data-order="${o.key}" data-user="${escHtml(o.userId || '')}" data-status="${s.key}">${s.label}</button>`).join('') + `<button type="button" class="order-del-btn" data-order="${escHtml(o.key)}" data-user="${escHtml(o.userId || '')}">Delete</button>`;
+          return `<div data-card="${escHtml(o.key)}" style="position:relative; border:1px solid var(--line); border-radius:14px; padding:18px; background:#fff;">
+            ${o.addedByAdmin ? '<span class="by-me-dot" title="Added by you" aria-label="Added by you"></span>' : ''}
+            <div class="name" style="font-size:15px; margin-bottom:6px; padding-right:22px;">${escHtml(c.name || 'Guest')} — ₹${escHtml(o.total)}</div>
             <div class="price" style="margin-bottom:4px;">${items}</div>
             <div class="price" style="margin-bottom:4px;">${escHtml(c.phone || '')} · ${c.door ? escHtml(c.door) + ', ' : ''}${escHtml(c.address || '')}${c.landmark ? ', ' + escHtml(c.landmark) : ''}${c.city ? ', ' + escHtml(c.city) : ''}${c.state ? ', ' + escHtml(c.state) : ''} ${escHtml(c.pin || '')}</div>
             <div class="price" style="opacity:.6; margin-bottom:10px;">${when}</div>
             <div class="order-status-row">${statusBtns}</div>
           </div>`;
         }).join('') + `</div>`;
+        body.querySelectorAll('.order-del-btn').forEach(btn => {
+          btn.addEventListener('click', async () => {
+            const { order, user } = btn.dataset;
+            const sure = await askConfirm('Sure? This deletes the order everywhere, as if it never existed. It can’t be undone.', 'Yes, delete it', 'Keep it');
+            if(!sure) return;
+            btn.disabled = true;
+            try{
+              const notionOk = await deleteOrderEverywhere(order, user || null);
+              const card = btn.closest('[data-card]');
+              if(card) card.remove();
+              if(!body.querySelector('[data-card]')) body.innerHTML = `<p style="font-family:'Cormorant Garamond',serif; font-style:italic; font-size:14px; color:var(--ink-soft);">No orders yet ⋆</p>`;
+              toast(notionOk ? 'Order deleted ⋆' : 'Deleted on the site, but Notion still has it — remove it there by hand ⋆');
+            } catch(err){
+              toast("Couldn't delete that (" + (err.code || err.message) + ")");
+              btn.disabled = false;
+            }
+          });
+        });
         body.querySelectorAll('.order-status-btn').forEach(btn => {
           btn.addEventListener('click', () => {
             const { order, user, status } = btn.dataset;
@@ -1232,7 +1359,7 @@
         });
       })
       .catch(err => {
-        body.innerHTML = `<p style="font-family:'Montserrat',sans-serif; font-size:12.5px; color:var(--error);">Couldn't load orders (${err.code || err.message}). This usually means Firebase's database rules aren't letting your admin account read the "orders" node yet — check your Realtime Database rules.</p>`;
+        body.innerHTML = `<p style="font-family:'Montserrat',sans-serif; font-size:12.5px; color:var(--error);">Couldn't load orders (${err.code || err.message}). This usually means the database permissions aren't letting your admin account read orders yet.</p>`;
       });
   }
 
@@ -1432,6 +1559,11 @@
   });
 
   const WA_NUMBER = "919180481171"; // update here anytime this changes
+  // Every WhatsApp link is built here, so the customer's email is always in the message.
+  function waUrl(msg){
+    const em = currentUser && currentUser.email;
+    return 'https://wa.me/' + WA_NUMBER + '?text=' + encodeURIComponent(msg + (em ? '\n\nMy email: ' + em : ''));
+  }
 
   // ---- Size selection (required before ordering/adding to bag on sized items) ----
   document.addEventListener('click', (e) => {
@@ -1488,8 +1620,7 @@
     if(!btn) return;
     e.preventDefault();
     e.stopPropagation();
-    const msg = encodeURIComponent(`Hi! I'd like to order the ${btn.dataset.product} in a custom size. Here are my measurements: `);
-    window.open(`https://wa.me/${WA_NUMBER}?text=${msg}`, '_blank');
+    window.open(waUrl(`Hi! I'd like to order the ${btn.dataset.product} in a custom size. Here are my measurements: `), '_blank');
   });
 
   // ---- Order via WhatsApp (single item), validated against size ----
@@ -1504,12 +1635,12 @@
       const sizeLabel = card ? selectedSizeLabel(card) : '';
       const product = link.dataset.product + (sizeLabel ? ` (${sizeLabel})` : '');
       const price = link.dataset.price;
-      const msg = encodeURIComponent(`Hi! I'd like to order: ${product} - ₹${price}`);
-      link.href = `https://wa.me/${WA_NUMBER}?text=${msg}`;
+      link.href = waUrl(`Hi! I'd like to order: ${product} - ₹${price}`);
     });
   });
   document.getElementById('footerWa').href = `https://wa.me/${WA_NUMBER}`;
   document.getElementById('footerWa').target = '_blank';
+  document.getElementById('footerWa').addEventListener('click', (e) => { e.currentTarget.href = waUrl('Hi Mirel!'); });
 
   // ---- Generic slide-panel helpers ----
   function wirePanel(btnId, panelId, backdropId){
@@ -1770,6 +1901,7 @@
     document.getElementById('pdPrice').innerHTML = scratched
       ? `<span class="strike">₹${inr(scratched)}</span>${price}`
       : price;
+    document.getElementById('pdRating').innerHTML = card.dataset.rating ? starsHtml(card.dataset.rating, true) : '';
     document.getElementById('pdDesc').textContent = desc;
     renderConnected(card);
     document.getElementById('pdSizes').innerHTML = sizesEl ? sizesEl.outerHTML : (dimsEl ? dimsEl.outerHTML : '');
@@ -1915,8 +2047,7 @@
     const pdWa = document.getElementById('pdWa');
     const sizeLabel = selectedSizeLabel(currentCard);
     const product = pdWa.dataset.product + (sizeLabel ? ` (${sizeLabel})` : '');
-    const msg = encodeURIComponent(`Hi! I'd like to order: ${product} - ₹${pdWa.dataset.price}`);
-    pdWa.href = `https://wa.me/${WA_NUMBER}?text=${msg}`;
+    pdWa.href = waUrl(`Hi! I'd like to order: ${product} - ₹${pdWa.dataset.price}`);
     // WhatsApp orders are added by hand from the admin "Add order" panel — nothing is recorded automatically.
   });
 
@@ -1995,25 +2126,52 @@
   function escHtml(s){ return String(s == null ? '' : s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
   function safePhotos(r){ return (Array.isArray(r.photos) ? r.photos : []).filter(u => typeof u === 'string' && u.startsWith('data:image/jpeg;base64,')); }
   function reviewWho(r){ return '— ' + escHtml(r.customerName || 'a happy customer'); }
+  function ownStars(r, cls){
+    const v = Math.round(Number(r && r.rating));
+    return v >= 1 && v <= 5 ? `<div class="${cls}">${starsHtml(v)}</div>` : '';
+  }
   function testiCardHtml(r, isDup){
     const ph = safePhotos(r)[0];
-    return `<div class="testi${isDup ? ' dup' : ''}">${ph ? `<img src="${escHtml(ph)}" alt="" loading="lazy">` : ''}<p>"${escHtml(r.description)}"</p><div class="who">${reviewWho(r)}</div></div>`;
+    return `<div class="testi${isDup ? ' dup' : ''}${ph ? ' has-photo' : ''}">${ph ? `<img src="${escHtml(ph)}" alt="" loading="lazy">` : ''}${ownStars(r, 'testi-stars')}<p>"${escHtml(r.description)}"</p><div class="who">${reviewWho(r)}</div></div>`;
   }
   function reviewFullHtml(r){
     const photos = safePhotos(r).map(u => `<img src="${escHtml(u)}" alt="" loading="lazy">`).join('');
-    return `<div class="review-card">${photos ? `<div class="review-photos">${photos}</div>` : ''}<p>"${escHtml(r.description)}"</p><div class="who">${reviewWho(r)}</div></div>`;
+    return `<div class="review-card">${photos ? `<div class="review-photos">${photos}</div>` : ''}${ownStars(r, 'rev-stars')}<p>"${escHtml(r.description)}"</p><div class="who">${reviewWho(r)}</div></div>`;
   }
   let approvedReviews = [];
   function renderTesti(){
+    const viewport = document.querySelector('.testi-viewport');
     const grid = document.getElementById('testiGrid');
     const readAll = document.getElementById('readAllReviews');
     if(!approvedReviews.length){ readAll.style.display = 'none'; return; }
     const latest = approvedReviews.slice(0, 6);
-    const useMarquee = latest.length >= 4;
-    grid.classList.toggle('few', !useMarquee);
-    grid.innerHTML = latest.map(r => testiCardHtml(r, false)).join('') + (useMarquee ? latest.map(r => testiCardHtml(r, true)).join('') : '');
     readAll.style.display = '';
+    grid.classList.remove('few');
+    viewport.classList.remove('moving');
+    grid.innerHTML = latest.map(r => testiCardHtml(r, false)).join('');
+    // Do the cards fit on this screen? Then they simply stay still, centred.
+    const gap = parseFloat(getComputedStyle(grid).columnGap) || 0;
+    const slot = grid.firstElementChild.getBoundingClientRect().width + gap;   // one card + its gap
+    const setWidth = latest.length * slot;
+    const room = viewport.clientWidth;
+    if(setWidth - gap <= room + 0.5) return;
+    // They don't fit: loop sideways. The strip is two identical halves, and each half must be at
+    // least as wide as the screen, so a short list is repeated enough times to leave no gap.
+    const copies = Math.max(1, Math.ceil(room / setWidth));
+    const half = [];
+    for(let i = 0; i < copies; i++) half.push(...latest);
+    grid.innerHTML = half.map(r => testiCardHtml(r, false)).join('') + half.map(r => testiCardHtml(r, true)).join('');
+    grid.style.setProperty('--dur', Math.max(20, Math.round(copies * setWidth / 40)) + 's');   // steady ~40px per second
+    viewport.classList.add('moving');
   }
+  // Re-check the fit when the window (or phone orientation) changes width.
+  let testiLastW = window.innerWidth, testiResizeTimer;
+  window.addEventListener('resize', () => {
+    clearTimeout(testiResizeTimer);
+    testiResizeTimer = setTimeout(() => {
+      if(window.innerWidth !== testiLastW){ testiLastW = window.innerWidth; if(approvedReviews.length) renderTesti(); }
+    }, 150);
+  });
   function snapToReviews(snap){
     const v = snap.val() || {};
     return Object.keys(v).map(k => Object.assign({ id: k }, v[k])).sort((a, b) => (b.timestamp || '').localeCompare(a.timestamp || ''));
@@ -2045,6 +2203,7 @@
   document.getElementById('reviewsPageClose').addEventListener('click', closeReviewsPage);
   document.querySelectorAll('.nav-links a[href^="#"]').forEach(a => a.addEventListener('click', closeReviewsPage));
   loadApprovedReviews();
+  loadRatings();
 
   // ---- Leave a note (customer form; only reachable from a delivered order) ----
   const notePanel = document.getElementById('notePanel');
@@ -2081,11 +2240,18 @@
     box.innerHTML = notePhotosArr.map((u, i) => `<div class="note-thumb"><img src="${u}" alt=""><button type="button" data-rm="${i}" aria-label="Remove photo">&times;</button></div>`).join('');
     box.querySelectorAll('[data-rm]').forEach(b => b.addEventListener('click', () => { notePhotosArr.splice(+b.dataset.rm, 1); renderNoteThumbs(); }));
   }
+  let noteRating = 0;
+  function setNoteRating(v){
+    noteRating = v;
+    document.querySelectorAll('#noteStars button').forEach(b => { const on = Number(b.dataset.v) <= v; b.classList.toggle('on', on); b.setAttribute('aria-checked', String(Number(b.dataset.v) === v)); });
+  }
+  document.querySelectorAll('#noteStars button').forEach(b => b.addEventListener('click', () => setNoteRating(Number(b.dataset.v))));
   function openNote(orderKey, productName){
     if(!currentUser){ toast('Sign in to leave a note ⋆'); return; }
-    noteCtx = { orderKey, productName };
+    noteCtx = { orderKey, productName: productBase(productName) };
     notePhotosArr = [];
-    document.getElementById('noteProduct').textContent = productName;
+    setNoteRating(0);
+    document.getElementById('noteProduct').textContent = noteCtx.productName;
     document.getElementById('noteAs').textContent = 'Posting as ' + (currentUser.displayName || 'a Mirel customer');
     document.getElementById('noteText').value = '';
     renderNoteThumbs();
@@ -2108,6 +2274,7 @@
   });
   document.getElementById('noteSubmit').addEventListener('click', async () => {
     if(!currentUser || !noteCtx) return;
+    if(!noteRating){ toast('Tap a star rating first ⋆'); return; }
     const text = document.getElementById('noteText').value.trim();
     if(text.length < 10){ toast('Add a few words first ⋆'); return; }
     const btn = document.getElementById('noteSubmit');
@@ -2118,6 +2285,7 @@
         uid: currentUser.uid,
         customerName: currentUser.displayName || 'A Mirel customer',
         productName: noteCtx.productName,
+        rating: noteRating,
         orderKey: noteCtx.orderKey,
         description: text,
         photos: notePhotosArr,
@@ -2150,6 +2318,7 @@
         return `<div style="border:1px solid var(--line); border-radius:14px; padding:18px; background:#fff;">
           <div class="name" style="font-size:15px; margin-bottom:4px;">${escHtml(r.customerName || '')}${r.productName ? ' · ' + escHtml(r.productName) : ''}</div>
           <div class="price" style="opacity:.6; margin-bottom:10px;">${escHtml(when)}</div>
+          ${Number(r.rating) >= 1 ? `<div style="margin-bottom:10px;">${starsHtml(Number(r.rating), true)}</div>` : ''}
           <div style="font-family:'Cormorant Garamond',serif; font-style:italic; font-size:16px; line-height:1.6; color:var(--ink); margin-bottom:12px; white-space:pre-wrap;">${escHtml(r.description)}</div>
           ${photos ? `<div style="display:flex; gap:8px; flex-wrap:wrap; margin-bottom:12px;">${photos}</div>` : ''}
           <div class="order-status-row">${buttons}</div>
@@ -2164,6 +2333,8 @@
         `<div style="max-width:480px; margin-bottom:34px; display:flex; flex-direction:column; gap:12px;">
           <input id="manualName" class="mirel-input" type="text" maxlength="60" placeholder="Name">
           <textarea id="manualText" class="mirel-input" rows="4" maxlength="1000" placeholder="Their words" style="border-radius:22px; resize:vertical;"></textarea>
+          <select id="manualProduct" class="mirel-input"><option value="">Product (optional)</option>${[...document.querySelectorAll('#grid .card h3')].map(h => `<option value="${escHtml(h.textContent)}">${escHtml(h.textContent)}</option>`).join('')}</select>
+          <select id="manualRating" class="mirel-input"><option value="">Stars (optional)</option><option value="5">5 stars</option><option value="4">4 stars</option><option value="3">3 stars</option><option value="2">2 stars</option><option value="1">1 star</option></select>
           <button type="button" id="manualAdd" class="bag-send" style="width:auto; align-self:flex-start; padding:13px 34px; border:none; cursor:pointer; font-family:'Montserrat',sans-serif;">Add to site</button>
         </div>` +
         head(`Live on the site (${approved.length})`) +
@@ -2175,18 +2346,24 @@
           if(act === 'approve'){
             const r = pending.find(x => x.key === key);
             const updates = {};
-            updates['reviewsApproved/' + key] = { customerName: r.customerName || 'A Mirel customer', description: r.description || '', photos: r.photos || [], timestamp: r.timestamp || new Date().toISOString() };
+            const rec = { customerName: r.customerName || 'A Mirel customer', description: r.description || '', photos: r.photos || [], timestamp: r.timestamp || new Date().toISOString() };
+            if(r.productName) rec.productName = r.productName;
+            if(Number(r.rating) >= 1) rec.rating = Number(r.rating);
+            updates['reviewsApproved/' + key] = rec;
             updates['reviewsPending/' + key] = null;
             await db.ref().update(updates);
+            await bumpRating(r.productName, r.rating, +1);
             toast('Approved — it’s live ⋆');
           } else if(act === 'reject'){
             if(!(await askConfirm('Reject and delete this note?', 'Yes, delete', 'Keep it'))) return;
             await db.ref('reviewsPending/' + key).remove();
           } else if(act === 'remove'){
             if(!(await askConfirm('Take this note off the site?', 'Yes, remove', 'Keep it'))) return;
+            const gone = approved.find(x => x.key === key);
             await db.ref('reviewsApproved/' + key).remove();
+            if(gone) await bumpRating(gone.productName, gone.rating, -1);
           }
-          renderAdminReviews(); loadApprovedReviews();
+          renderAdminReviews(); loadApprovedReviews(); loadRatings();
         } catch(err){ toast("Couldn't do that: " + (err.code || err.message)); }
       }));
       document.getElementById('manualAdd').addEventListener('click', async () => {
@@ -2194,20 +2371,24 @@
         const text = document.getElementById('manualText').value.trim();
         if(!name || text.length < 5){ toast('Add a name and their words ⋆'); return; }
         try{
-          await db.ref('reviewsApproved').push({ customerName: name, description: text, timestamp: new Date().toISOString() });
+          const rec = { customerName: name, description: text, timestamp: new Date().toISOString() };
+          const prod = document.getElementById('manualProduct').value, stars = Number(document.getElementById('manualRating').value);
+          if(prod) rec.productName = prod;
+          if(stars >= 1) rec.rating = stars;
+          await db.ref('reviewsApproved').push(rec);
+          await bumpRating(prod, stars, +1);
           toast('Added to the site ⋆');
-          renderAdminReviews(); loadApprovedReviews();
+          renderAdminReviews(); loadApprovedReviews(); loadRatings();
         } catch(err){ toast("Couldn't add that: " + (err.code || err.message)); }
       });
     }).catch(err => {
-      body.innerHTML = `<p style="font-family:'Montserrat',sans-serif; font-size:12.5px; color:var(--error);">Couldn't load notes (${escHtml(err.code || err.message)}). This usually means the Firebase database rules for notes haven't been added yet.</p>`;
+      body.innerHTML = `<p style="font-family:'Montserrat',sans-serif; font-size:12.5px; color:var(--error);">Couldn't load notes (${escHtml(err.code || err.message)}). This usually means the database permissions for notes haven't been updated yet.</p>`;
     });
   }
 
   // ---- Custom order WhatsApp link ----
   document.getElementById('customWa').addEventListener('click', (e) => {
-    const msg = encodeURIComponent("Hi! I'd like to talk about a custom order.");
-    e.currentTarget.href = `https://wa.me/${WA_NUMBER}?text=${msg}`;
+    e.currentTarget.href = waUrl("Hi! I'd like to talk about a custom order.");
   });
 
   // ---- Checkout flow ----
@@ -2396,11 +2577,94 @@
       });
       rzp.open();
     } catch(err){
-      payError.textContent = "Payment isn't set up yet — this goes live once Razorpay keys are added on Netlify. Message on WhatsApp instead for now.";
+      payError.textContent = "Online payment is coming soon ⋆ Please message me on WhatsApp to place your order for now.";
       payError.style.display = 'block';
       payBtn.disabled = false;
       payBtn.textContent = 'Pay & Place Order';
     }
+  });
+
+  // ---- WhatsApp needs a verified sign-in ----
+  // One gate for every WhatsApp link on the site. It runs before each link's own handler.
+  function friendlyAuthMsg(err){
+    const c = (err && err.code) || '';
+    if(c === 'auth/popup-closed-by-user' || c === 'auth/cancelled-popup-request') return '';
+    const m = {
+      'auth/email-already-in-use': 'That email already has an account — check your password ⋆',
+      'auth/wrong-password': 'That email or password doesn’t look right ⋆',
+      'auth/invalid-credential': 'That email or password doesn’t look right ⋆',
+      'auth/invalid-email': 'That email address doesn’t look right ⋆',
+      'auth/weak-password': 'Please choose a password with at least 6 characters ⋆',
+      'auth/too-many-requests': 'Too many tries — please wait a minute and try again ⋆',
+      'auth/network-request-failed': 'No connection — please check your internet and try again ⋆',
+      'auth/popup-blocked': 'Your browser blocked the sign-in window — please allow pop-ups and try again ⋆'
+    };
+    return m[c] || 'Something went wrong — please try again ⋆';
+  }
+  function authToast(err){ const t = friendlyAuthMsg(err); if(t) toast(t); }
+  const WA_SELECTOR = '.wa-link[data-product], .fit-custom, #pdWa, #customWa, #footerWa, a[href^="https://wa.me/"]';
+  function waAllowed(){ return !!(currentUser && currentUser.emailVerified); }
+  document.addEventListener('click', (e) => {
+    const t = e.target.closest && e.target.closest(WA_SELECTOR);
+    if(!t || waAllowed()) return;
+    e.preventDefault();
+    e.stopPropagation();
+    if(currentUser && currentUser.email){ showVerify(); } else { toast('Sign in to message us on WhatsApp ⋆'); }
+    openPanelPair('profilePanel', 'profileBackdrop');
+  }, true);
+
+  // Which account was just created in this visit (matched by id, so a later Google sign-in is never mistaken for it)
+  let pendingSignUp = false, signUpUid = '', verifyTimer = null;
+  const isNewSignUp = () => !!(auth.currentUser && auth.currentUser.uid === signUpUid);
+  const VERIFY_URL = () => location.origin + '/';   // the email link brings them straight back to the shop
+  function showVerify(){
+    const u = auth.currentUser; if(!u) return;
+    document.getElementById('authForm').style.display = 'none';
+    document.getElementById('profileLoggedIn').style.display = 'none';
+    document.getElementById('verifyBox').style.display = 'flex';
+    document.getElementById('profileTitle').textContent = 'Verify email';
+    document.getElementById('verifyTitle').textContent = isNewSignUp() ? 'Check your mail inbox (or spam)' : 'Verify your email';
+    document.getElementById('verifyMsg').innerHTML = isNewSignUp()
+      ? 'We sent a link to <b>' + escHtml(u.email) + '</b>.<br>Tap it and you’ll be signed in automatically.'
+      : 'WhatsApp needs a verified email. Tap “Resend link” and we’ll email one to <b>' + escHtml(u.email) + '</b>.';
+    clearInterval(verifyTimer);
+    verifyTimer = setInterval(checkVerified, 3000);
+  }
+  async function checkVerified(){
+    const u = auth.currentUser;
+    if(!u){ clearInterval(verifyTimer); return; }
+    if(u.emailVerified){ await onVerified(); return; }
+    try{ await u.reload(); } catch(e){ return; }
+    if(auth.currentUser && auth.currentUser.emailVerified) await onVerified();
+  }
+  let verifiedDone = '';
+  async function onVerified(){
+    clearInterval(verifyTimer);
+    const u = auth.currentUser; if(!u || verifiedDone === u.uid) return;
+    verifiedDone = u.uid;
+    try{ await u.getIdToken(true); } catch(e){}      // refresh the sign-in token so Firebase's rules see the verified email
+    currentUser = u;
+    db.ref('emailIndex/' + u.uid).set({ email: u.email.toLowerCase() }).catch(() => {});
+    showLoggedIn(u.displayName || u.email, u.email || '');
+    toast('Email verified — you’re signed in ⋆');
+  }
+  window.addEventListener('focus', () => { if(document.getElementById('verifyBox').style.display === 'flex') checkVerified(); });
+  document.getElementById('verifyResend').addEventListener('click', (e) => {
+    const u = auth.currentUser; if(!u) return;
+    const b = e.currentTarget; b.disabled = true;
+    u.sendEmailVerification({ url: VERIFY_URL() }).then(() => {
+      document.getElementById('verifyTitle').textContent = 'Check your mail inbox (or spam)';
+      toast('Link sent ⋆');
+    }).catch(err => toast(err.code === 'auth/too-many-requests' ? 'Please wait a minute before asking again ⋆' : (friendlyAuthMsg(err) || 'Something went wrong — please try again ⋆')))
+      .finally(() => setTimeout(() => { b.disabled = false; }, 20000));
+  });
+  document.getElementById('verifyRestart').addEventListener('click', async () => {
+    const u = auth.currentUser;
+    clearInterval(verifyTimer);
+    try{ localStorage.removeItem('mirelLastEmail'); } catch(e){}
+    try{ if(isNewSignUp() && u) await u.delete(); else await auth.signOut(); }
+    catch(e){ try{ await auth.signOut(); } catch(_){} }
+    signUpUid = '';
   });
 
   // ---- Profile / sign in (real Firebase Authentication) ----
@@ -2468,7 +2732,7 @@
     body.innerHTML = '<div class="bag-empty">Loading your orders…</div>';
     db.ref('users/' + currentUser.uid + '/orders').once('value').then(snap => {
       const rows = [];
-      snap.forEach(child => rows.push(Object.assign({key: child.key}, child.val())));
+      snap.forEach(child => { rows.push(Object.assign({key: child.key}, child.val())); });
       rows.sort((a,b) => (b.timestamp||'').localeCompare(a.timestamp||''));
       if(!rows.length){ body.innerHTML = '<div class="bag-empty">No orders yet ⋆</div>'; return; }
       const cards = [];
@@ -2488,7 +2752,8 @@
               <div class="price">₹${inr(it.price)}</div>
               <div style="font-size:11px; color:var(--ink-soft); margin-top:4px;">Ordered ${when} · Order total ₹${inr(o.total)}</div>
               <div class="order-status-badge${status === 'delivered' ? ' delivered' : ''}">${statusText}</div>
-              ${status === 'delivered' ? `<button class="bag-item-move" data-note-order="${escHtml(o.key)}" data-note-name="${escHtml(it.name)}" style="display:block; margin-top:10px;">Leave a note ⋆</button>` : ''}
+              ${status === 'ordered' ? `<a href="${escHtml(waUrl('Hi! I\'d like to change or cancel my order: ' + it.name + ' (ordered ' + when + ').'))}" target="_blank" rel="noopener" style="display:inline-block; margin-top:10px; font-family:'Cormorant Garamond',serif; font-style:italic; font-size:14px; color:var(--ink-soft); text-decoration:underline;">Need to change or cancel? Message me</a>` : ''}
+              ${status === 'delivered' ? `<button class="bag-item-move" data-note-order="${escHtml(o.key)}" data-note-name="${escHtml(it.product || productBase(it.name))}" style="display:block; margin-top:10px;">Leave a note ⋆</button>` : ''}
             </div>
           </div>`);
         });
@@ -2514,7 +2779,7 @@
     const msg = kind === 'approved'
       ? `Hello Mirel, I requested an exchange for "${itemName}" (ordered on ${d}) through your website, and it has been approved. I am writing to arrange the exchange. Thank you.`
       : `Hello Mirel, I requested an exchange for "${itemName}" (ordered on ${d}) through your website. I understand my photo was unclear, so I am sending a clearer one here. Thank you.`;
-    return 'https://wa.me/' + WA_NUMBER + '?text=' + encodeURIComponent(msg);
+    return waUrl(msg);
   }
   function renderExchange(){
     const list = document.getElementById('exchangeList');
@@ -2523,7 +2788,7 @@
     const base = 'users/' + currentUser.uid;
     Promise.all([db.ref(base + '/orders').once('value'), db.ref(base + '/exchanges').once('value')]).then(([oSnap, xSnap]) => {
       const rows = [];
-      oSnap.forEach(child => rows.push(Object.assign({key: child.key}, child.val())));
+      oSnap.forEach(child => { rows.push(Object.assign({key: child.key}, child.val())); });
       const reqs = xSnap.val() || {};
       rows.sort((a,b) => (b.timestamp||'').localeCompare(a.timestamp||''));
       if(!rows.length){ list.innerHTML = '<div class="bag-empty">No orders yet ⋆</div>'; return; }
@@ -2657,11 +2922,9 @@
   // ---- Add an order (admin only) — for orders taken on WhatsApp ----
   // Picks a product from the live shop, you type size/colour/price + the customer's email.
   // The customer must have signed in to Mirel once with that Google email (that's how we find their account).
-  // A temporary list below the form (kept 24 hours, then cleared) lets you Undo a mistake.
   const closeAddOrder = wirePanel('addOrderLink', 'addOrderPanel', 'addOrderBackdrop');
   document.getElementById('addOrderClose').addEventListener('click', closeAddOrder);
   const aoEl = (id) => document.getElementById(id);
-  const aoRecentMap = {};
   function aoProducts(){
     return [...document.querySelectorAll('#grid .card')].map(c => ({
       name: c.querySelector('h3').textContent.trim(),
@@ -2754,6 +3017,7 @@
   aoEl('aoEmail').addEventListener('input', () => { clearTimeout(aoCheckTimer); aoCheckTimer = setTimeout(aoCheckAddress, 450); });
   aoEl('aoEmail').addEventListener('change', aoCheckAddress);
   ['aoModeSaved','aoModeManual'].forEach(id => aoEl(id).addEventListener('change', () => aoSetMode(aoEl('aoModeSaved').checked ? 'saved' : 'manual')));
+  aoEl('aoPrice').addEventListener('input', () => { const el = aoEl('aoPrice'); el.value = el.value.replace(/\D/g, '').slice(0, 7); });
   aoEl('aoPin').addEventListener('input', () => {
     const pin = aoEl('aoPin');
     pin.value = pin.value.replace(/\D/g, '').slice(0, 6);
@@ -2771,31 +3035,7 @@
     aoEl('aoPreview').style.display = p ? 'flex' : 'none';
     if(p){ aoEl('aoPreviewImg').src = p.img; aoEl('aoPreviewDesc').textContent = p.desc; }
   });
-  document.getElementById('addOrderLink').addEventListener('click', (e) => { e.preventDefault(); aoFillProducts(); aoLoadRecent(); aoResetAddress(); });
-
-  async function aoLoadRecent(){
-    if(!currentUser || currentUser.email !== ADMIN_EMAIL) return;
-    const box = aoEl('aoRecent');
-    try{
-      const snap = await db.ref('adminRecent').once('value');
-      const now = Date.now();
-      const rows = [], stale = {};
-      snap.forEach(ch => {
-        const v = ch.val() || {};
-        if(now - new Date(v.createdAt || 0).getTime() > 24*3600*1000) stale['adminRecent/' + ch.key] = null;
-        else rows.push(Object.assign({ id: ch.key }, v));
-      });
-      if(Object.keys(stale).length) db.ref().update(stale).catch(() => {});
-      rows.sort((a,b) => (b.createdAt||'').localeCompare(a.createdAt||''));
-      rows.forEach(r => { aoRecentMap[r.id] = r; });
-      box.innerHTML = rows.length ? rows.map(r => `<div style="display:flex; justify-content:space-between; align-items:center; gap:12px; padding:10px 0; border-bottom:1px solid var(--line);">
-          <div style="font-family:'Montserrat',sans-serif; font-size:12.5px; color:var(--ink);">${escHtml(r.itemName)} — ₹${inr(r.price)}<br><span style="opacity:.65;">${escHtml(r.email)} · ${new Date(r.createdAt).toLocaleString()}</span></div>
-          <button type="button" class="ao-undo" data-id="${escHtml(r.id)}" style="background:none; border:1px solid var(--line); border-radius:30px; padding:8px 16px; font-size:11px; letter-spacing:1.5px; text-transform:uppercase; cursor:pointer; color:var(--ink);">Undo</button>
-        </div>`).join('') : '<p class="bag-empty" style="margin-top:10px; text-align:left;">Nothing added yet ⋆</p>';
-    } catch(err){
-      box.innerHTML = `<p style="font-family:'Montserrat',sans-serif; font-size:12.5px; color:var(--error);">Couldn't load the list (${escHtml(err.code || err.message)}).</p>`;
-    }
-  }
+  document.getElementById('addOrderLink').addEventListener('click', (e) => { e.preventDefault(); aoFillProducts(); aoResetAddress(); });
 
   aoEl('aoAdd').addEventListener('click', async () => {
     const msg = aoEl('aoMsg'), btn = aoEl('aoAdd'), sel = aoEl('aoProduct');
@@ -2812,6 +3052,7 @@
     if(!base){ say('Pick a product (or choose Other and type a name).', true); return; }
     if(priceRaw === '' || !isFinite(price) || price < 0){ say('Enter the price you agreed.', true); return; }
     if(!/^[^\s@\/#$\[\]]+@[^\s@\/#$\[\]]+\.[^\s@\/#$\[\]]+$/.test(email)){ say("That email doesn't look right.", true); return; }
+    if(aoAddr.email === email && aoAddr.uid === null){ say("No Mirel account for that email yet. Ask them to sign in once on the site with that Google email, then add it again.", true); return; }
     // An order can't be added without an address: their saved one, or one typed here.
     const addrMode = aoEl('aoModeSaved').checked ? 'saved' : (aoEl('aoModeManual').checked ? 'manual' : '');
     let addrObj = null;
@@ -2843,44 +3084,19 @@
       const timestamp = new Date().toISOString();
       const items = [{ name: itemName, price, product: prod ? prod.name : '' }];
       await db.ref().update({
-        ['orders/' + orderId]: { items, total: price, customer: Object.assign({ name: custName, phone, email }, addrObj), userId: uid, timestamp, paid, status: 'ordered' },
-        ['users/' + uid + '/orders/' + orderId]: { items, total: price, name: custName, email, timestamp, status: 'ordered' },
-        ['adminRecent/' + orderId]: { itemName, price, email, uid, createdAt: timestamp }
+        ['orders/' + orderId]: { items, total: price, customer: Object.assign({ name: custName, phone, email }, addrObj), userId: uid, timestamp, paid, status: 'ordered', addedByAdmin: true },
+        ['users/' + uid + '/orders/' + orderId]: { items, total: price, name: custName, email, timestamp, status: 'ordered' }
       });
       const notionOk = await syncNewItemToNotion(orderId, custName, phone, addressTextFor(addrObj), { name: itemName, price }, timestamp, paid);
-      say(notionOk ? `Added: ${itemName} for ${email} ⋆` : `Added for ${email}, but it did NOT reach Notion. Undo it and add it again after checking Notion.`, !notionOk);
+      say(notionOk ? `Added: ${itemName} for ${email} ⋆` : `Added for ${email}, but it did NOT reach Notion. Delete it from Orders and add it again after checking Notion.`, !notionOk);
       ['aoSize','aoColor','aoPrice','aoEmail','aoOther'].forEach(id => { aoEl(id).value = ''; });
       sel.value = ''; sel.dispatchEvent(new Event('change'));
       aoEl('aoPaid').checked = false;
       aoResetAddress();
-      aoLoadRecent();
     } catch(err){
       say("Couldn't add that (" + (err.code || err.message) + ").", true);
     }
     btn.disabled = false;
-  });
-
-  aoEl('aoRecent').addEventListener('click', async (e) => {
-    const btn = e.target.closest('.ao-undo');
-    if(!btn) return;
-    // First tap asks "Sure?", second tap does it — so a stray tap can't remove an order.
-    if(btn.dataset.sure !== '1'){ btn.dataset.sure = '1'; btn.textContent = 'Sure?'; setTimeout(() => { btn.dataset.sure = ''; btn.textContent = 'Undo'; }, 4000); return; }
-    const id = btn.dataset.id, r = aoRecentMap[id];
-    if(!r) return;
-    btn.disabled = true;
-    try{
-      await db.ref().update({
-        ['orders/' + id]: null,
-        ['users/' + r.uid + '/orders/' + id]: null,
-        ['adminRecent/' + id]: null
-      });
-      syncStatusToNotion(id, 'cancel');
-      toast('Removed ⋆');
-      aoLoadRecent();
-    } catch(err){
-      toast("Couldn't undo that (" + (err.code || err.message) + ")");
-      btn.disabled = false;
-    }
   });
 
   function refreshExchCount(){
@@ -2897,7 +3113,7 @@
     body.innerHTML = hint('Loading…');
     db.ref('exchangeRequests').orderByChild('status').equalTo('requested').once('value').then(snap => {
       const reqs = [];
-      snap.forEach(c => reqs.push(Object.assign({ key: c.key }, c.val())));
+      snap.forEach(c => { reqs.push(Object.assign({ key: c.key }, c.val())); });
       reqs.sort((a, b) => (a.requestedAt || '').localeCompare(b.requestedAt || ''));
       if(!reqs.length){ body.innerHTML = hint('No exchange requests waiting ⋆'); return; }
       body.innerHTML = `<div style="display:grid; grid-template-columns:repeat(auto-fill,minmax(300px,1fr)); gap:18px;">` + reqs.map(r => {
@@ -2940,7 +3156,7 @@
         } catch(err){ toast("Couldn't send that: " + (err.code || err.message)); }
       }));
     }).catch(err => {
-      body.innerHTML = `<p style="font-family:'Montserrat',sans-serif; font-size:12.5px; color:var(--error);">Couldn't load exchange requests (${escHtml(err.code || err.message)}). This usually means the Firebase database rules haven't been updated yet.</p>`;
+      body.innerHTML = `<p style="font-family:'Montserrat',sans-serif; font-size:12.5px; color:var(--error);">Couldn't load exchange requests (${escHtml(err.code || err.message)}). This usually means the database permissions haven't been updated yet.</p>`;
     });
   }
 
@@ -3028,19 +3244,23 @@
     try { localStorage.setItem('mirelLastEmail', email); } catch(e){}
     auth.signInWithEmailAndPassword(email, pass).catch(err => {
       if(err.code === 'auth/user-not-found' || err.code === 'auth/invalid-credential'){
-        auth.createUserWithEmailAndPassword(email, pass).then(cred => {
-          if(name) return cred.user.updateProfile({ displayName: name });
-        }).catch(err2 => toast(err2.message));
+        pendingSignUp = true;
+        auth.createUserWithEmailAndPassword(email, pass).then(async cred => {
+          if(name) await cred.user.updateProfile({ displayName: name });
+          try{ await cred.user.sendEmailVerification({ url: VERIFY_URL() }); }
+          catch(mailErr){ toast(mailErr.code === 'auth/too-many-requests' ? 'Please wait a minute, then tap Resend link ⋆' : 'Couldn’t send the link — tap Resend link ⋆'); }
+          showVerify();
+        }).catch(err2 => { pendingSignUp = false; authToast(err2); });
       } else {
-        toast(err.message);
+        authToast(err);
       }
     });
   });
 
-  document.getElementById('googleBtn').addEventListener('click', () => {
+  ['googleBtn', 'googleBtn2'].forEach(id => document.getElementById(id).addEventListener('click', () => {
     const provider = new firebase.auth.GoogleAuthProvider();
-    auth.signInWithPopup(provider).catch(err => toast(err.message));
-  });
+    auth.signInWithPopup(provider).catch(authToast);
+  }));
 
   // ---- Google One Tap: the "Continue as [Name]" panel for a returning visitor ----
   // Only offered to someone not already signed in; never shown to an active session.
@@ -3069,13 +3289,20 @@
     document.getElementById('exchAdminLink').style.display = (user && user.email === ADMIN_EMAIL) ? 'inline' : 'none';
     document.getElementById('insightsLink').style.display = (user && user.email === ADMIN_EMAIL) ? 'inline' : 'none';
     document.getElementById('addOrderLink').style.display = (user && user.email === ADMIN_EMAIL) ? 'inline' : 'none';
-    if(user && user.email === ADMIN_EMAIL){ refreshExchCount(); aoLoadRecent(); }
+    if(user && user.email === ADMIN_EMAIL){ refreshExchCount(); }
     // Lets the admin find this account by email (used by "Add order"). Only for verified emails.
     if(user && user.emailVerified && user.email){ db.ref('emailIndex/' + user.uid).set({ email: user.email.toLowerCase() }).catch(() => {}); }
     if(user){
       showLoggedIn(user.displayName || user.email, user.email || '');
       loadUserData(user.uid);
+      if(pendingSignUp){ signUpUid = user.uid; pendingSignUp = false; }
+      if(user.email && !user.emailVerified){
+        if(isNewSignUp()) showVerify();
+        else user.reload().then(() => { if(user.emailVerified) onVerified(); }).catch(() => {});   // they may have just tapped the email link
+      }
     } else {
+      clearInterval(verifyTimer); verifiedDone = '';
+      document.getElementById('verifyBox').style.display = 'none';
       document.getElementById('authForm').style.display = 'flex';
       document.getElementById('profileLoggedIn').style.display = 'none';
       document.getElementById('profileTitle').textContent = 'Sign In';
@@ -3088,6 +3315,7 @@
 
   function showLoggedIn(name, email){
     document.getElementById('authForm').style.display = 'none';
+    document.getElementById('verifyBox').style.display = 'none';
     document.getElementById('profileLoggedIn').style.display = 'block';
     document.getElementById('profileTitle').textContent = 'Account';
     document.getElementById('profileInitial').textContent = (name || '?').charAt(0).toUpperCase();
@@ -3180,6 +3408,7 @@
       <h3>${nm}</h3>
       ${sizesHtml}
       <div class="price">₹${inr(priceForOrder)}</div>
+      <div class="card-rating"></div>
       <a class="wa-link" href="#" data-product="${nm}" data-price="${priceForOrder}">Order via WhatsApp <span class="arrow">→</span></a>
     `;
     return div;
