@@ -243,13 +243,25 @@
   #checkoutPanel .bag-panel-head{ padding:28px 6% 20px; border-bottom:1px solid var(--line); }
   #checkoutPanel .bag-panel-head .serif{ font-size:30px; }
   #checkoutPanel .bag-items{ padding:36px 6% 110px; display:flex; justify-content:center; }
+  #checkoutPanel #checkoutBody{ flex-direction:column; align-items:center; }
+  #checkoutPanel #checkoutBody > p{ width:100%; max-width:560px; text-align:center; padding:12px 18px; border-radius:16px; background:rgba(185,143,151,0.14); margin-bottom:22px !important; }
   #checkoutPanel #checkoutForm{ width:100%; max-width:560px; }
+  @media(max-width:820px){
+    #checkoutPanel .bag-items{ padding:20px 5% 110px; }
+    #checkoutPanel #checkoutBody > p, #checkoutPanel #checkoutForm{ max-width:none; }
+  }
   #checkoutPanel .checkout-row{ gap:16px; }
 
   /* Wishlist ⇄ bag move actions on each row */
   .bag-item{ position:relative; }
   .bag-item-actions{ display:flex; gap:10px; align-items:center; }
   .bag-item-move{ background:none; border:none; padding:0; font-family:'Cormorant Garamond',serif; font-style:italic; font-size:13.5px; color:var(--ink-soft); text-decoration:underline; text-underline-offset:3px; cursor:pointer; white-space:nowrap; }
+  .bag-item .bag-qty{ display:inline-flex; align-items:center; gap:2px; margin-top:8px; padding:3px; border:1px solid var(--line); border-radius:30px; background:#fff; box-shadow:0 2px 6px rgba(36,20,23,0.06); }
+  .bag-item .bag-qty button{ width:28px; height:28px; padding:0; border-radius:50%; border:none; background:transparent; font-size:16px; line-height:1; color:var(--ink); cursor:pointer; transition:background .2s ease; }
+  .bag-item .bag-qty button:hover{ background:rgba(110,46,54,0.09); }
+  .bag-item .bag-qty button:disabled{ opacity:.35; cursor:default; background:transparent; }
+  .bag-item .bag-qty span{ min-width:24px; text-align:center; font-size:13px; }
+  .bag-item .price small{ font-size:11px; opacity:.75; }
   .bag-item-move:hover{ color:var(--accent); }
 
   /* PRODUCT DETAIL PAGE */
@@ -486,6 +498,29 @@
   .note-thumb button{ position:absolute; top:-6px; right:-6px; width:22px; height:22px; border-radius:50%; border:1px solid var(--line); background:var(--cream); color:var(--ink); font-size:13px; line-height:1; cursor:pointer; }
   .testi.dup{ display:none; }
   .testi p{ display:-webkit-box; -webkit-line-clamp:6; -webkit-box-orient:vertical; overflow:hidden; }
+  /* Reviews strip — tighter cards, less empty space, and no faded edges: the strip runs edge to edge and
+     cards simply slide off the screen. A soft mauve glow rises from the bottom of the section instead. */
+  .kind-words{ padding:68px 0 50px; background:radial-gradient(ellipse 72% 46% at 50% 58%, rgba(185,143,151,0.22), rgba(185,143,151,0) 75%), var(--cream); }
+  .kind-words .section-head{ margin-bottom:26px; padding:0 6%; }
+  .kind-words > div:last-child{ margin-top:10px !important; }
+  .testi-viewport{ --tw:290px; --tg:22px; }
+  .testi-viewport:not(.moving){ width:min(1100px, 88%); max-width:none; }
+  .testi-viewport.moving{ max-width:none; padding:8px 0 46px; margin-bottom:-30px; -webkit-mask-image:none; mask-image:none; }
+  .testi-grid{ align-items:center; }
+  .testi{ padding:20px 20px; min-height:0; }
+  .testi img{ aspect-ratio:4/3; margin-bottom:12px; }
+  .testi p{ font-size:16px; line-height:1.6; margin-bottom:12px; -webkit-line-clamp:5; }
+  @media(max-width:820px){
+    .kind-words{ padding:44px 0 36px; }
+    .kind-words .section-head{ margin-bottom:18px; }
+    .testi-viewport{ --tw:188px; --tg:12px; }
+    .testi-viewport.moving{ padding:6px 0 34px; margin-bottom:-28px; }
+    .testi{ padding:14px 13px; border-radius:20px; box-shadow:0 10px 22px rgba(36,20,23,0.16), 0 3px 8px rgba(36,20,23,0.10); }
+    .testi img{ aspect-ratio:3/2; margin-bottom:9px; border-radius:12px; }
+    .testi p{ font-size:14px; line-height:1.5; margin-bottom:9px; -webkit-line-clamp:5; }
+    .testi .who{ font-size:9px; letter-spacing:1.4px; }
+    .testi-stars{ margin-bottom:7px; font-size:12px; }
+  }
   .review-card{ background:var(--bg); border-radius:24px; padding:30px 26px; box-shadow:0 14px 30px rgba(36,20,23,0.18), 0 4px 10px rgba(36,20,23,0.12); break-inside:avoid; margin-bottom:24px; }
   .review-card p{ font-family:'Cormorant Garamond', serif; font-style:italic; font-size:18px; line-height:1.7; color:#fff; margin-bottom:14px; }
   .review-card .who{ font-size:10px; letter-spacing:1.8px; text-transform:uppercase; color:rgba(255,255,255,0.8); }
@@ -505,6 +540,11 @@
   .rate-num{ font-family:'Montserrat',sans-serif; font-size:12.5px; font-weight:500; letter-spacing:.4px; color:var(--ink); margin-left:7px; vertical-align:middle; }
   .card-rating{ display:flex; align-items:center; margin:-2px 0 8px; }
   .card-rating:empty{ display:none; }
+  .pd-reviews{ display:none; margin-top:72px; padding-top:44px; border-top:1px solid var(--line); }
+  .pd-reviews-head{ text-align:center; margin-bottom:34px; }
+  .pd-reviews-title{ font-family:'Cormorant Garamond',serif; font-style:italic; font-weight:500; font-size:34px; line-height:1.2; color:var(--ink); margin-top:8px; }
+  .pd-reviews-grid{ display:flex; flex-wrap:wrap; justify-content:center; align-items:flex-start; gap:24px; }
+  .pd-reviews-grid .review-card{ width:min(100%, 340px); margin-bottom:0; }
   .pd-rating{ display:flex; align-items:center; margin:2px 0 10px; font-size:17px; }
   .pd-rating:empty{ display:none; }
   .testi-stars, .rev-stars{ margin:0 0 10px; font-size:14px; line-height:0; }
@@ -853,7 +893,15 @@
           <a class="wa-link" id="pdWa" href="#" target="_blank">Order via WhatsApp <span class="arrow">→</span></a>
         </div>
         <button class="pd-addcart" id="pdAddBag">Add to Cart</button>
+        <button class="pd-addcart" id="pdBuyNow" style="margin-top:10px;">Buy Now</button>
       </div>
+    </div>
+    <div class="pd-reviews" id="pdReviews">
+      <div class="pd-reviews-head">
+        <div class="eyebrow">What they’re saying</div>
+        <div class="pd-reviews-title" id="pdReviewsTitle"></div>
+      </div>
+      <div class="pd-reviews-grid" id="pdReviewsGrid"></div>
     </div>
   </div>
 </div>
@@ -1071,9 +1119,8 @@
       <div style="text-align:center; font-size:10px; letter-spacing:1px; color:var(--ink-soft); opacity:.7;">— or —</div>
       <input id="authName" type="text" placeholder="Name" class="mirel-input">
       <input id="authEmail" type="email" placeholder="you@gmail.com" class="mirel-input" autocomplete="email">
-      <input id="authPass" type="password" placeholder="Create a password" class="mirel-input" autocomplete="current-password">
-      <button type="submit" style="padding:12px 0; background:var(--ink); color:var(--cream); border:none; border-radius:4px; font-size:11px; letter-spacing:2px; text-transform:uppercase; cursor:pointer;">Continue</button>
-      <div style="font-size:11px; color:var(--ink-soft); text-align:center; opacity:.75;">New here? Just enter an email and password — your account is created automatically.</div>
+      <button type="submit" id="authSubmit" style="padding:14px 0; background:var(--ink); color:var(--cream); border:none; border-radius:30px; font-size:11px; letter-spacing:2px; text-transform:uppercase; cursor:pointer;">Continue</button>
+      <div id="authHint" style="font-size:11px; color:var(--ink-soft); text-align:center; opacity:.75;">New here? Just enter your name and email — we’ll email you a link to sign in. No password needed.</div>
     </form>
     <div id="verifyBox" style="display:none; flex-direction:column; align-items:center; gap:14px; text-align:center; padding-top:6px;">
       <div class="serif" id="verifyTitle" style="font-size:24px; line-height:1.3;">Verify your email</div>
@@ -1672,6 +1719,7 @@
       return;
     }
     closeBag();
+    buyNow = null;
     openCheckout();
   });
   const closeBag = wirePanel('bagBtn', 'bagPanel', 'bagBackdrop');
@@ -1682,35 +1730,64 @@
   const DELIVERY_FEE = 89;          // charged on orders below that
   const deliveryFor = (subtotal) => (subtotal > 0 && subtotal < FREE_DELIVERY_FROM) ? DELIVERY_FEE : 0;
   const bagSubtotal = () => [...bag.values()].reduce((a,b) => a + (b.unitPrice * b.qty), 0);
+  // Checkout normally covers the whole bag. "Buy Now" checks out just one piece and leaves the bag alone.
+  let buyNow = null;
+  const checkoutLines = () => buyNow ? [buyNow] : [...bag.values()];
+  const checkoutSubtotal = () => checkoutLines().reduce((a, b) => a + (b.unitPrice * b.qty), 0);
 
   function renderCheckoutSummary(){
-    const sub = bagSubtotal(), del = deliveryFor(sub);
-    document.getElementById('checkoutSummary').innerHTML = `
+    const sub = checkoutSubtotal(), del = deliveryFor(sub);
+    const lines = checkoutLines().map(it => `<div class="bag-line"><span>${escHtml(it.title)}${(it.qty || 1) > 1 ? ' × ' + it.qty : ''}</span><span>₹${inr(it.unitPrice * it.qty)}</span></div>`).join('');
+    document.getElementById('checkoutSummary').innerHTML = lines + `
       <div class="bag-line"><span>Subtotal</span><span>₹${inr(sub)}</span></div>
       <div class="bag-line" style="margin-bottom:0;"><span>Delivery</span><span>${del ? '₹' + inr(del) : 'Free'}</span></div>
       <div class="bag-total"><span>Total</span><span>₹${inr(sub + del)}</span></div>`;
   }
 
   function renderBag(){
-    bagCount.textContent = bag.size;
-    bagCount.classList.toggle('zero', bag.size === 0);
+    const totalQty = [...bag.values()].reduce((a, b) => a + (b.qty || 1), 0);
+    bagCount.textContent = totalQty;
+    bagCount.classList.toggle('zero', totalQty === 0);
     if(bag.size === 0){
       bagItemsEl.innerHTML = '<div class="bag-empty">Nothing here yet — open a product and tap "Add to Bag."</div>';
     } else {
       bagItemsEl.innerHTML = [...bag.entries()].map(([key, item]) => `
         <div class="bag-item">
-          <img src="${imgFor(item.title, item.img, item.base)}" alt="${item.title}" style="width:52px;height:52px;object-fit:cover;border-radius:16px;flex-shrink:0;box-shadow:0 5px 12px rgba(143,97,105,0.25);">
+          <img src="${imgFor(item.title, item.img, item.base)}" alt="${escHtml(item.title)}" style="width:52px;height:52px;object-fit:cover;border-radius:16px;flex-shrink:0;box-shadow:0 5px 12px rgba(143,97,105,0.25);">
           <div style="flex:1;">
-            <div class="name">${item.title}${item.qty > 1 ? ' x' + item.qty : ''}</div>
-            <div class="price">₹${inr(item.unitPrice * item.qty)}</div>
-            <button class="bag-item-move" data-movekeep="${key}">Move to wishlist</button>
+            <div class="name">${escHtml(item.title)}</div>
+            <div class="price">₹${inr(item.unitPrice * item.qty)}${item.qty > 1 ? ` <small>· ₹${inr(item.unitPrice)} each</small>` : ''}</div>
+            <div class="bag-qty">
+              <button type="button" data-dec="${escHtml(key)}" aria-label="One less">&minus;</button>
+              <span>${item.qty || 1}</span>
+              <button type="button" data-inc="${escHtml(key)}" aria-label="One more" ${(item.qty || 1) >= 10 ? 'disabled' : ''}>+</button>
+            </div>
+            <div><button class="bag-item-move" data-movekeep="${escHtml(key)}">Move to wishlist</button></div>
           </div>
-          <button data-remove="${key}" aria-label="Remove">&times;</button>
+          <button data-remove="${escHtml(key)}" aria-label="Remove">&times;</button>
         </div>`).join('');
       bagItemsEl.querySelectorAll('[data-remove]').forEach(btn => {
         btn.addEventListener('click', async () => {
           const ok = await askConfirm('Remove this from your bag?', 'Yes, remove it', 'Keep it');
           if(ok){ bag.delete(btn.dataset.remove); renderBag(); }
+        });
+      });
+      bagItemsEl.querySelectorAll('[data-inc]').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const it = bag.get(btn.dataset.inc); if(!it) return;
+          if((it.qty || 1) >= 10){ toast('Up to 10 of one piece ⋆'); return; }
+          it.qty = (it.qty || 1) + 1; renderBag();
+        });
+      });
+      bagItemsEl.querySelectorAll('[data-dec]').forEach(btn => {
+        btn.addEventListener('click', async () => {
+          const key = btn.dataset.dec, it = bag.get(key); if(!it) return;
+          if((it.qty || 1) <= 1){
+            const ok = await askConfirm('Remove this from your bag?', 'Yes, remove it', 'Keep it');
+            if(ok){ bag.delete(key); renderBag(); }
+            return;
+          }
+          it.qty -= 1; renderBag();
         });
       });
       bagItemsEl.querySelectorAll('[data-movekeep]').forEach(btn => {
@@ -1902,6 +1979,7 @@
       ? `<span class="strike">₹${inr(scratched)}</span>${price}`
       : price;
     document.getElementById('pdRating').innerHTML = card.dataset.rating ? starsHtml(card.dataset.rating, true) : '';
+    renderProductReviews(name);
     document.getElementById('pdDesc').textContent = desc;
     renderConnected(card);
     document.getElementById('pdSizes').innerHTML = sizesEl ? sizesEl.outerHTML : (dimsEl ? dimsEl.outerHTML : '');
@@ -1981,6 +2059,24 @@
     });
   })();
 
+  // Approved reviews written about this exact piece, shown under it. Nothing shows if there are none.
+  var allApprovedCache = null, allApprovedAt = 0, pdReviewToken = 0;
+  function renderProductReviews(name){
+    const box = document.getElementById('pdReviews'), grid = document.getElementById('pdReviewsGrid');
+    const token = ++pdReviewToken;
+    box.style.display = 'none'; grid.innerHTML = '';
+    const key = productBase(name).toLowerCase();
+    const paint = (list) => {
+      if(token !== pdReviewToken) return;                       // they have moved on to another piece
+      const mine = list.filter(r => r.productName && productBase(r.productName).toLowerCase() === key);
+      if(!mine.length) return;
+      document.getElementById('pdReviewsTitle').textContent = 'On the ' + productBase(name);
+      grid.innerHTML = mine.map(reviewFullHtml).join('');
+      box.style.display = 'block';
+    };
+    if(allApprovedCache && Date.now() - allApprovedAt < 60000){ paint(allApprovedCache); return; }
+    db.ref('reviewsApproved').once('value').then(snap => { allApprovedCache = snapToReviews(snap); allApprovedAt = Date.now(); paint(allApprovedCache); }).catch(() => {});
+  }
   function closeProduct(){ pdModal.classList.remove('open'); pdBackdrop.classList.remove('open'); syncNavSolid(); releaseScrollLock(); }
 
   // ---- Routing: each product gets a real URL (/product/slug) ----
@@ -2080,6 +2176,23 @@
     db.ref('cartAddCounts/' + encodeURIComponent(title)).transaction(n => (n || 0) + 1, (err) => { if(err) console.warn('Cart count was not saved:', err.code || err.message); });
     renderBag();
     toast('Added to cart ⋆');
+  });
+
+  document.getElementById('pdBuyNow').addEventListener('click', () => {
+    if(!currentCard) return;
+    if(!sizeChosen(currentCard)){ document.getElementById('pdSizeWarning').style.display = 'block'; toast('Please select a size first ⋆'); return; }
+    if(!currentUser){
+      toast('Please sign in to place an order ⋆');
+      openPanelPair('profilePanel', 'profileBackdrop');
+      return;
+    }
+    const sizeLabel = selectedSizeLabel(currentCard);
+    const title = currentCard.querySelector('h3').textContent + (sizeLabel ? ` (${sizeLabel})` : '');
+    const unitPrice = Number(currentCard.querySelector('.price').textContent.replace(/[^0-9]/g,''));
+    const img = currentCard.querySelector('.thumb img').src;
+    buyNow = { title, base: currentCard.querySelector('h3').textContent, unitPrice, qty: pdQty, img };
+    closeProduct();
+    openCheckout();
   });
 
   // ---- Care & Size Guide (full page) ----
@@ -2414,6 +2527,7 @@
     }
   }
   function closeCheckout(){
+    buyNow = null;
     document.getElementById('checkoutPanel').classList.remove('open');
     document.getElementById('checkoutBackdrop').classList.remove('open');
     releaseScrollLock();
@@ -2510,10 +2624,11 @@
 
   document.getElementById('checkoutForm').addEventListener('submit', async (e) => {
     e.preventDefault();
-    const subtotal = bagSubtotal();
+    const wasBuyNow = !!buyNow;
+    const subtotal = checkoutSubtotal();
     const delivery = deliveryFor(subtotal);
     const total = subtotal + delivery;   // what the customer actually pays
-    const items = [...bag.values()].map(it => ({name: it.title + (it.qty > 1 ? ` x${it.qty}` : ''), price: String(it.unitPrice * it.qty), product: it.base || ''}));
+    const items = checkoutLines().map(it => ({name: it.title + (it.qty > 1 ? ` x${it.qty}` : ''), price: String(it.unitPrice * it.qty), product: it.base || ''}));
     const payError = document.getElementById('payError');
     const payBtn = document.getElementById('payBtn');
     payError.style.display = 'none';
@@ -2554,6 +2669,8 @@
         theme: { color: '#6E2E36' },
         handler: function(response){
           logOrder(items, total, customer, undefined, delivery);
+          if(!wasBuyNow){ bag.clear(); renderBag(); }     // a paid-for bag shouldn't stay full; Buy Now leaves the bag as it was
+          payBtn.disabled = false; payBtn.textContent = 'Pay & Place Order';   // otherwise a second order in the same visit is blocked
           closeCheckout();
           document.getElementById('orderOkPanel').classList.add('open');
           document.getElementById('orderOkBackdrop').classList.add('open');
@@ -2590,11 +2707,10 @@
     const c = (err && err.code) || '';
     if(c === 'auth/popup-closed-by-user' || c === 'auth/cancelled-popup-request') return '';
     const m = {
-      'auth/email-already-in-use': 'That email already has an account — check your password ⋆',
-      'auth/wrong-password': 'That email or password doesn’t look right ⋆',
-      'auth/invalid-credential': 'That email or password doesn’t look right ⋆',
+      'auth/email-already-in-use': 'That email already has an account',
+      'auth/invalid-action-code': 'That link has expired or was already used — please request a new one ⋆',
+      'auth/expired-action-code': 'That link has expired — please request a new one ⋆',
       'auth/invalid-email': 'That email address doesn’t look right ⋆',
-      'auth/weak-password': 'Please choose a password with at least 6 characters ⋆',
       'auth/too-many-requests': 'Too many tries — please wait a minute and try again ⋆',
       'auth/network-request-failed': 'No connection — please check your internet and try again ⋆',
       'auth/popup-blocked': 'Your browser blocked the sign-in window — please allow pop-ups and try again ⋆'
@@ -2617,6 +2733,24 @@
   let pendingSignUp = false, signUpUid = '', verifyTimer = null;
   const isNewSignUp = () => !!(auth.currentUser && auth.currentUser.uid === signUpUid);
   const VERIFY_URL = () => location.origin + '/';   // the email link brings them straight back to the shop
+  // ---- Email-link sign-in (no password) ----
+  let linkSentTo = '';
+  const LINK_SETTINGS = () => ({ url: location.origin + '/', handleCodeInApp: true });
+  function showLinkSent(email){
+    linkSentTo = email;
+    document.getElementById('authForm').style.display = 'none';
+    document.getElementById('profileLoggedIn').style.display = 'none';
+    document.getElementById('verifyBox').style.display = 'flex';
+    document.getElementById('profileTitle').textContent = 'Sign In';
+    document.getElementById('verifyTitle').textContent = 'Check your mail inbox (or spam)';
+    document.getElementById('verifyMsg').innerHTML = 'We sent a link to <b>' + escHtml(email) + '</b>.<br>Tap it and you’ll be signed in.';
+  }
+  function backToForm(){
+    linkSentTo = '';
+    document.getElementById('verifyBox').style.display = 'none';
+    document.getElementById('authForm').style.display = 'flex';
+    document.getElementById('profileTitle').textContent = 'Sign In';
+  }
   function showVerify(){
     const u = auth.currentUser; if(!u) return;
     document.getElementById('authForm').style.display = 'none';
@@ -2650,8 +2784,16 @@
   }
   window.addEventListener('focus', () => { if(document.getElementById('verifyBox').style.display === 'flex') checkVerified(); });
   document.getElementById('verifyResend').addEventListener('click', (e) => {
+    const b = e.currentTarget;
+    if(linkSentTo){
+      b.disabled = true;
+      auth.sendSignInLinkToEmail(linkSentTo, LINK_SETTINGS()).then(() => toast('Link sent ⋆'))
+        .catch(err => toast(err.code === 'auth/too-many-requests' ? 'Please wait a minute before asking again ⋆' : (friendlyAuthMsg(err) || 'Something went wrong — please try again ⋆')))
+        .finally(() => setTimeout(() => { b.disabled = false; }, 20000));
+      return;
+    }
     const u = auth.currentUser; if(!u) return;
-    const b = e.currentTarget; b.disabled = true;
+    b.disabled = true;
     u.sendEmailVerification({ url: VERIFY_URL() }).then(() => {
       document.getElementById('verifyTitle').textContent = 'Check your mail inbox (or spam)';
       toast('Link sent ⋆');
@@ -2659,6 +2801,7 @@
       .finally(() => setTimeout(() => { b.disabled = false; }, 20000));
   });
   document.getElementById('verifyRestart').addEventListener('click', async () => {
+    if(linkSentTo){ try{ localStorage.removeItem('mirelLastEmail'); localStorage.removeItem('mirelPendingEmail'); } catch(e){} backToForm(); return; }
     const u = auth.currentUser;
     clearInterval(verifyTimer);
     try{ localStorage.removeItem('mirelLastEmail'); } catch(e){}
@@ -3235,26 +3378,60 @@
     if(rememberedEmail) document.getElementById('authEmail').value = rememberedEmail;
   } catch(e){}
 
+  let finishingLink = false;
+  const cleanUrl = () => { try{ history.replaceState({}, '', location.origin + location.pathname); } catch(e){} };
+  const linkPending = (() => { try{ return auth.isSignInWithEmailLink(location.href); } catch(e){ return false; } })();
+  async function completeLink(email){
+    let name = '';
+    try{ name = localStorage.getItem('mirelPendingName') || ''; } catch(e){}
+    try{
+      const cred = await auth.signInWithEmailLink(email, location.href);
+      cleanUrl();
+      try{ localStorage.removeItem('mirelPendingEmail'); localStorage.removeItem('mirelPendingName'); } catch(e){}
+      finishingLink = false;
+      document.getElementById('authName').style.display = '';
+      document.getElementById('authSubmit').textContent = 'Continue';
+      document.getElementById('authHint').textContent = 'New here? Just enter your name and email — we’ll email you a link to sign in. No password needed.';
+      if(name && !cred.user.displayName){
+        try{ await cred.user.updateProfile({ displayName: name }); } catch(e){}
+        db.ref('users/' + cred.user.uid + '/name').set(name).catch(() => {});
+        showLoggedIn(name, cred.user.email || '');
+      }
+      toast('You’re signed in ⋆');
+    }catch(err){
+      if(err.code === 'auth/invalid-email'){ enterFinishMode(); toast('Please re-enter the email the link was sent to ⋆'); return; }
+      cleanUrl(); finishingLink = false; authToast(err);
+    }
+  }
+  // Opened the link in a different browser than the one that asked for it: just ask for the email once
+  function enterFinishMode(){
+    finishingLink = true;
+    document.getElementById('authForm').style.display = 'flex';
+    document.getElementById('verifyBox').style.display = 'none';
+    document.getElementById('profileTitle').textContent = 'Sign In';
+    document.getElementById('authName').style.display = 'none';
+    document.getElementById('authSubmit').textContent = 'Finish signing in';
+    document.getElementById('authHint').textContent = 'Enter the email the link was sent to, to finish signing in.';
+    openPanelPair('profilePanel', 'profileBackdrop');
+  }
+  function handleEmailLinkOnLoad(){
+    let email = '';
+    try{ email = localStorage.getItem('mirelPendingEmail') || ''; } catch(e){}
+    if(email) completeLink(email); else enterFinishMode();
+  }
+
   document.getElementById('authForm').addEventListener('submit', (e) => {
     e.preventDefault();
     const email = document.getElementById('authEmail').value.trim();
-    const pass = document.getElementById('authPass').value;
     const name = document.getElementById('authName').value.trim();
-    if(!email || !pass){ toast('Add your email and password to continue ⋆'); return; }
-    try { localStorage.setItem('mirelLastEmail', email); } catch(e){}
-    auth.signInWithEmailAndPassword(email, pass).catch(err => {
-      if(err.code === 'auth/user-not-found' || err.code === 'auth/invalid-credential'){
-        pendingSignUp = true;
-        auth.createUserWithEmailAndPassword(email, pass).then(async cred => {
-          if(name) await cred.user.updateProfile({ displayName: name });
-          try{ await cred.user.sendEmailVerification({ url: VERIFY_URL() }); }
-          catch(mailErr){ toast(mailErr.code === 'auth/too-many-requests' ? 'Please wait a minute, then tap Resend link ⋆' : 'Couldn’t send the link — tap Resend link ⋆'); }
-          showVerify();
-        }).catch(err2 => { pendingSignUp = false; authToast(err2); });
-      } else {
-        authToast(err);
-      }
-    });
+    if(!email || !/^\S+@\S+\.\S+$/.test(email)){ toast('Add your email to continue ⋆'); return; }
+    if(finishingLink){ completeLink(email); return; }
+    try { localStorage.setItem('mirelLastEmail', email); localStorage.setItem('mirelPendingEmail', email); localStorage.setItem('mirelPendingName', name); } catch(e){}
+    const btn = document.getElementById('authSubmit'); btn.disabled = true;
+    auth.sendSignInLinkToEmail(email, LINK_SETTINGS())
+      .then(() => showLinkSent(email))
+      .catch(err => authToast(err))
+      .finally(() => { btn.disabled = false; });
   });
 
   ['googleBtn', 'googleBtn2'].forEach(id => document.getElementById(id).addEventListener('click', () => {
@@ -3293,6 +3470,7 @@
     // Lets the admin find this account by email (used by "Add order"). Only for verified emails.
     if(user && user.emailVerified && user.email){ db.ref('emailIndex/' + user.uid).set({ email: user.email.toLowerCase() }).catch(() => {}); }
     if(user){
+      linkSentTo = '';
       showLoggedIn(user.displayName || user.email, user.email || '');
       loadUserData(user.uid);
       if(pendingSignUp){ signUpUid = user.uid; pendingSignUp = false; }
@@ -3301,6 +3479,8 @@
         else user.reload().then(() => { if(user.emailVerified) onVerified(); }).catch(() => {});   // they may have just tapped the email link
       }
     } else {
+      if(linkPending && !window.__linkHandled){ window.__linkHandled = true; setTimeout(handleEmailLinkOnLoad, 0); }
+      if(linkSentTo || finishingLink) return;      // keep the "check your mail" / "finish signing in" screen as it is
       clearInterval(verifyTimer); verifiedDone = '';
       document.getElementById('verifyBox').style.display = 'none';
       document.getElementById('authForm').style.display = 'flex';
