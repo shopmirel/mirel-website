@@ -5,8 +5,8 @@
 // and asks Razorpay to open a payment for exactly that amount.
 // The page never decides the price, so changing it in the browser does nothing.
 //
-// Needs two settings in Netlify (Site configuration -> Environment variables):
-//   RAZORPAY_KEY_ID      and      RAZORPAY_KEY_SECRET
+// Needs one setting in Netlify (Site configuration -> Environment variables):
+//   RAZORPAY_KEY_SECRET
 // (it also reuses the Notion token your other functions already use)
 
 const NOTION_VERSION = '2022-06-28';
@@ -60,7 +60,9 @@ async function loadPrices(token) {
 exports.handler = async function (event) {
   if (event.httpMethod !== 'POST') return json(405, { error: 'method_not_allowed' });
 
-  const keyId = process.env.RAZORPAY_KEY_ID;
+  // The key ID is public (it is also in the shop page), so it lives here. Only the SECRET is a Netlify setting.
+  // At launch: replace this with your live key ID (and the one in the shop page).
+  const keyId = process.env.RAZORPAY_KEY_ID || 'rzp_test_ToyVGdhsgM8vuY';
   const keySecret = process.env.RAZORPAY_KEY_SECRET;
   const token = notionToken();
   if (!keyId || !keySecret || !token) return json(500, { error: 'not_configured' });
