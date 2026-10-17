@@ -174,6 +174,7 @@
   .order-status-btn:hover{ border-color:var(--accent); }
   .order-status-btn.active{ background:var(--ink); color:var(--cream); border-color:var(--ink); }
   .by-me-dot{ position:absolute; top:16px; right:16px; width:10px; height:10px; border-radius:50%; background:var(--accent); box-shadow:0 0 0 4px rgba(110,46,54,0.14); }
+  .auth-card{ display:flex; flex-direction:column; gap:14px; padding:20px 18px; border:1px solid var(--line); border-radius:26px; background:rgba(255,255,255,0.55); box-shadow:0 6px 18px rgba(36,20,23,0.05); }
   .verify-pill{ padding:12px 34px; border:1px solid var(--line); border-radius:30px; background:#fff; font-family:'Montserrat',sans-serif; font-size:11px; letter-spacing:1.5px; text-transform:uppercase; cursor:pointer; color:var(--ink); transition:border-color .2s ease; }
   .verify-pill:hover{ border-color:var(--accent); }
   .verify-pill:disabled{ opacity:.5; cursor:default; }
@@ -498,29 +499,11 @@
   .note-thumb button{ position:absolute; top:-6px; right:-6px; width:22px; height:22px; border-radius:50%; border:1px solid var(--line); background:var(--cream); color:var(--ink); font-size:13px; line-height:1; cursor:pointer; }
   .testi.dup{ display:none; }
   .testi p{ display:-webkit-box; -webkit-line-clamp:6; -webkit-box-orient:vertical; overflow:hidden; }
-  /* Reviews strip — tighter cards, less empty space, and no faded edges: the strip runs edge to edge and
-     cards simply slide off the screen. A soft mauve glow rises from the bottom of the section instead. */
-  .kind-words{ padding:68px 0 50px; background:radial-gradient(ellipse 72% 46% at 50% 58%, rgba(185,143,151,0.22), rgba(185,143,151,0) 75%), var(--cream); }
-  .kind-words .section-head{ margin-bottom:26px; padding:0 6%; }
-  .kind-words > div:last-child{ margin-top:10px !important; }
-  .testi-viewport{ --tw:290px; --tg:22px; }
-  .testi-viewport:not(.moving){ width:min(1100px, 88%); max-width:none; }
-  .testi-viewport.moving{ max-width:none; padding:8px 0 46px; margin-bottom:-30px; -webkit-mask-image:none; mask-image:none; }
-  .testi-grid{ align-items:center; }
-  .testi{ padding:20px 20px; min-height:0; }
-  .testi img{ aspect-ratio:4/3; margin-bottom:12px; }
-  .testi p{ font-size:16px; line-height:1.6; margin-bottom:12px; -webkit-line-clamp:5; }
-  @media(max-width:820px){
-    .kind-words{ padding:44px 0 36px; }
-    .kind-words .section-head{ margin-bottom:18px; }
-    .testi-viewport{ --tw:188px; --tg:12px; }
-    .testi-viewport.moving{ padding:6px 0 34px; margin-bottom:-28px; }
-    .testi{ padding:14px 13px; border-radius:20px; box-shadow:0 10px 22px rgba(36,20,23,0.16), 0 3px 8px rgba(36,20,23,0.10); }
-    .testi img{ aspect-ratio:3/2; margin-bottom:9px; border-radius:12px; }
-    .testi p{ font-size:14px; line-height:1.5; margin-bottom:9px; -webkit-line-clamp:5; }
-    .testi .who{ font-size:9px; letter-spacing:1.4px; }
-    .testi-stars{ margin-bottom:7px; font-size:12px; }
-  }
+  /* Reviews strip: original card sizes and spacing. Only change: no faded edges, and the strip runs to the very edge of the screen. */
+  .testi-viewport.moving{ max-width:none; -webkit-mask-image:none; mask-image:none; }
+  .kind-words{ padding-left:0; padding-right:0; }                      /* so the moving strip can reach the screen edges */
+  .kind-words .section-head{ padding:0 6%; }
+  .testi-viewport:not(.moving){ width:min(1100px, 88%); max-width:none; }   /* few reviews: same width and centring as before */
   .review-card{ background:var(--bg); border-radius:24px; padding:30px 26px; box-shadow:0 14px 30px rgba(36,20,23,0.18), 0 4px 10px rgba(36,20,23,0.12); break-inside:avoid; margin-bottom:24px; }
   .review-card p{ font-family:'Cormorant Garamond', serif; font-style:italic; font-size:18px; line-height:1.7; color:#fff; margin-bottom:14px; }
   .review-card .who{ font-size:10px; letter-spacing:1.8px; text-transform:uppercase; color:rgba(255,255,255,0.8); }
@@ -1112,15 +1095,19 @@
   </div>
   <div class="bag-items" id="profileBody">
     <form id="authForm" style="display:flex; flex-direction:column; gap:14px;">
+      <div class="auth-card">
       <button type="button" id="googleBtn" style="display:flex; align-items:center; justify-content:center; gap:10px; padding:12px 0; border:1px solid var(--line); border-radius:30px; background:#fff; font-size:12.5px; letter-spacing:0.5px; cursor:pointer; font-family:'Montserrat',sans-serif;">
         <svg width="16" height="16" viewBox="0 0 24 24"><path fill="#4285F4" d="M23.5 12.3c0-.8-.1-1.6-.2-2.3H12v4.5h6.4c-.3 1.5-1.1 2.7-2.4 3.6v3h3.9c2.3-2.1 3.6-5.2 3.6-8.8Z"/><path fill="#34A853" d="M12 24c3.2 0 5.9-1.1 7.9-2.9l-3.9-3c-1.1.7-2.4 1.2-4 1.2-3.1 0-5.7-2.1-6.6-4.9H1.4v3.1C3.4 21.3 7.4 24 12 24Z"/><path fill="#FBBC05" d="M5.4 14.4c-.2-.7-.4-1.5-.4-2.4s.1-1.6.4-2.4V6.5H1.4C.5 8.2 0 10 0 12s.5 3.8 1.4 5.5l4-3.1Z"/><path fill="#EA4335" d="M12 4.8c1.7 0 3.3.6 4.5 1.8l3.4-3.4C17.9 1.2 15.2 0 12 0 7.4 0 3.4 2.7 1.4 6.5l4 3.1C6.3 6.9 8.9 4.8 12 4.8Z"/></svg>
         Continue with Google
       </button>
+      </div>
       <div style="text-align:center; font-size:10px; letter-spacing:1px; color:var(--ink-soft); opacity:.7;">— or —</div>
+      <div class="auth-card">
       <input id="authName" type="text" placeholder="Name" class="mirel-input">
       <input id="authEmail" type="email" placeholder="you@gmail.com" class="mirel-input" autocomplete="email">
       <button type="submit" id="authSubmit" style="padding:14px 0; background:var(--ink); color:var(--cream); border:none; border-radius:30px; font-size:11px; letter-spacing:2px; text-transform:uppercase; cursor:pointer;">Continue</button>
       <div id="authHint" style="font-size:11px; color:var(--ink-soft); text-align:center; opacity:.75;">New here? Just enter your name and email — we’ll email you a link to sign in. No password needed.</div>
+      </div>
     </form>
     <div id="verifyBox" style="display:none; flex-direction:column; align-items:center; gap:14px; text-align:center; padding-top:6px;">
       <div class="serif" id="verifyTitle" style="font-size:24px; line-height:1.3;">Verify your email</div>
@@ -1371,6 +1358,7 @@
           const statusBtns = ORDER_STATUSES.map(s => `<button type="button" class="order-status-btn${s.key === status ? ' active' : ''}" data-order="${o.key}" data-user="${escHtml(o.userId || '')}" data-status="${s.key}">${s.label}</button>`).join('') + `<button type="button" class="order-del-btn" data-order="${escHtml(o.key)}" data-user="${escHtml(o.userId || '')}">Delete</button>`;
           return `<div data-card="${escHtml(o.key)}" style="position:relative; border:1px solid var(--line); border-radius:14px; padding:18px; background:#fff;">
             ${o.addedByAdmin ? '<span class="by-me-dot" title="Added by you" aria-label="Added by you"></span>' : ''}
+            ${(o.paid && o.razorpayOrderId) ? `<div class="paychk" data-rzp="${escHtml(o.razorpayOrderId)}" data-amt="${Math.round((o.total || 0) * 100)}" style="font-size:11px; letter-spacing:1px; margin-bottom:8px; color:var(--ink-soft);">Checking payment…</div>` : ''}
             <div class="name" style="font-size:15px; margin-bottom:6px; padding-right:22px;">${escHtml(c.name || 'Guest')} — ₹${escHtml(o.total)}</div>
             <div class="price" style="margin-bottom:4px;">${items}</div>
             <div class="price" style="margin-bottom:4px;">${escHtml(c.phone || '')} · ${c.door ? escHtml(c.door) + ', ' : ''}${escHtml(c.address || '')}${c.landmark ? ', ' + escHtml(c.landmark) : ''}${c.city ? ', ' + escHtml(c.city) : ''}${c.state ? ', ' + escHtml(c.state) : ''} ${escHtml(c.pin || '')}</div>
@@ -1378,6 +1366,14 @@
             <div class="order-status-row">${statusBtns}</div>
           </div>`;
         }).join('') + `</div>`;
+        body.querySelectorAll('.paychk').forEach(el => {
+          fetch('/.netlify/functions/payment-status', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ orderId: el.dataset.rzp }) })
+            .then(r => r.json()).then(st => {
+              const ok = st.paid && st.amount >= Number(el.dataset.amt);
+              el.textContent = ok ? '✓ Razorpay confirms this was paid' : '⚠ Razorpay does NOT confirm this payment — check before sending';
+              el.style.color = ok ? '#5f8a5a' : 'var(--error)'; el.style.fontWeight = '600';
+            }).catch(() => { el.textContent = 'Couldn’t check payment right now'; });
+        });
         body.querySelectorAll('.order-del-btn').forEach(btn => {
           btn.addEventListener('click', async () => {
             const { order, user } = btn.dataset;
@@ -1490,13 +1486,33 @@
     } catch(e) {}
   }
 
-  function logOrder(items, total, customer, paid, delivery){
+  // If someone paid but the page never saved the order (tab closed, UPI app switch, no signal), ask Razorpay
+  // whether it was really paid, and if so save the order now. Safe to run any number of times.
+  async function recoverPendingPayment(){
+    let p; try{ p = JSON.parse(localStorage.getItem('mirelPendingPay') || 'null'); } catch(_){ return; }
+    if(!p || !currentUser || p.uid !== currentUser.uid) return;
+    if(Date.now() - p.at > 24 * 3600 * 1000){ localStorage.removeItem('mirelPendingPay'); return; }
+    try{
+      const saved = await db.ref('users/' + currentUser.uid + '/orders/' + p.orderId).once('value');
+      if(saved.exists()){ localStorage.removeItem('mirelPendingPay'); return; }
+      const r = await fetch('/.netlify/functions/payment-status', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ orderId: p.orderId }) });
+      if(!r.ok) return;
+      const st = await r.json();
+      if(!st.paid || st.amount !== Math.round(p.total * 100)) return;
+      logOrder(p.items, p.total, p.customer, undefined, p.delivery, { paymentId: '', orderId: p.orderId });
+      if(!p.buyNow){ bag.clear(); renderBag(); }
+      localStorage.removeItem('mirelPendingPay');
+      toast('Your payment went through — your order is placed ⋆');
+    } catch(_){}
+  }
+
+  function logOrder(items, total, customer, paid, delivery, pay){
     // paid defaults to true (real checkout). The WhatsApp button passes false —
     // nothing has been paid at that point, so it must not be recorded as Paid.
     const isPaid = paid !== false;
     // Single shared ID across both the admin record and the customer's own
     // record, so a status update on one side can find the other.
-    const orderId = db.ref('orders').push().key;
+    const orderId = (pay && pay.orderId) ? pay.orderId : db.ref('orders').push().key;   // paid orders use the Razorpay order id, so one payment can only make one order
     const timestamp = new Date().toISOString();
     db.ref('orders/' + orderId).set({
       items, total, delivery: delivery || 0,
@@ -1504,8 +1520,9 @@
       userId: currentUser ? currentUser.uid : null,
       timestamp,
       paid: isPaid,
-      status: 'ordered'
-    });
+      status: 'ordered',
+      ...(pay ? { razorpayPaymentId: pay.paymentId, razorpayOrderId: pay.orderId } : {})
+    }).catch(() => {});   // a payment that already made an order is simply refused
     if(currentUser){
       db.ref('users/' + currentUser.uid + '/orders/' + orderId).set({
         items, total, delivery: delivery || 0,
@@ -1513,7 +1530,7 @@
         email: currentUser.email || '',
         timestamp,
         status: 'ordered'
-      });
+      }).catch(() => {});
       db.ref('users/' + currentUser.uid + '/name').set(currentUser.displayName || '');
       db.ref('users/' + currentUser.uid + '/email').set(currentUser.email || '');
     }
@@ -2620,7 +2637,7 @@
   }
 
   // ---- Razorpay: real key ID, safe to expose in frontend code ----
-  const RAZORPAY_KEY_ID = "rzp_test_XXXXXXXXXXXXXX"; // replace once your brother's Razorpay account gives you a real key
+  const RAZORPAY_KEY_ID = "rzp_test_ToyVGdhsgM8vuY"; // public test key ID (the secret key lives only in Netlify). Swap for the live key ID at launch.
 
   document.getElementById('checkoutForm').addEventListener('submit', async (e) => {
     e.preventDefault();
@@ -2653,11 +2670,17 @@
       const res = await fetch('/.netlify/functions/create-order', {
         method: 'POST',
         headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({ amount: total, subtotal, delivery })
+        body: JSON.stringify({ items: checkoutLines().map(it => ({ base: it.base || '', title: it.title, qty: it.qty })) })
       });
-      if(!res.ok) throw new Error('order-create-failed');
+      if(!res.ok){
+        let why = {}; try{ why = await res.json(); } catch(_){}
+        throw new Error(why.error || 'order-create-failed');
+      }
       const order = await res.json();
+      // The shop's own total must match what the server worked out, otherwise stop.
+      if(order.amount !== Math.round(total * 100)) throw new Error('price_mismatch');
 
+      try{ localStorage.setItem('mirelPendingPay', JSON.stringify({ orderId: order.id, items, total, delivery, customer, uid: currentUser.uid, buyNow: wasBuyNow, at: Date.now() })); } catch(_){}
       const rzp = new Razorpay({
         key: RAZORPAY_KEY_ID,
         amount: order.amount,
@@ -2667,8 +2690,29 @@
         order_id: order.id,
         prefill: { name: customer.name, email: customer.email, contact: customer.phone },
         theme: { color: '#6E2E36' },
-        handler: function(response){
-          logOrder(items, total, customer, undefined, delivery);
+        handler: async function(response){
+          payBtn.textContent = 'Confirming your payment…';
+          let confirmed = false;
+          try{
+            const v = await fetch('/.netlify/functions/verify-payment', {
+              method: 'POST',
+              headers: {'Content-Type': 'application/json'},
+              body: JSON.stringify({
+                razorpay_order_id: response.razorpay_order_id,
+                razorpay_payment_id: response.razorpay_payment_id,
+                razorpay_signature: response.razorpay_signature
+              })
+            });
+            confirmed = v.ok;
+          } catch(_){}
+          if(!confirmed){
+            payError.textContent = 'We couldn’t confirm your payment just yet. If money was deducted, please message me on WhatsApp with this reference: ' + response.razorpay_payment_id;
+            payError.style.display = 'block';
+            payBtn.disabled = false; payBtn.textContent = 'Pay & Place Order';
+            return;
+          }
+          logOrder(items, total, customer, undefined, delivery, { paymentId: response.razorpay_payment_id, orderId: response.razorpay_order_id });
+          try{ localStorage.removeItem('mirelPendingPay'); } catch(_){}
           if(!wasBuyNow){ bag.clear(); renderBag(); }     // a paid-for bag shouldn't stay full; Buy Now leaves the bag as it was
           payBtn.disabled = false; payBtn.textContent = 'Pay & Place Order';   // otherwise a second order in the same visit is blocked
           closeCheckout();
@@ -2687,6 +2731,7 @@
         }
       });
       rzp.on('payment.failed', function(response){
+        try{ localStorage.removeItem('mirelPendingPay'); } catch(_){}
         payError.textContent = 'Payment failed — please try again or message on WhatsApp instead.';
         payError.style.display = 'block';
         payBtn.disabled = false;
@@ -2694,7 +2739,10 @@
       });
       rzp.open();
     } catch(err){
-      payError.textContent = "Online payment is coming soon ⋆ Please message me on WhatsApp to place your order for now.";
+      const changed = err && (err.message === 'unknown_item' || err.message === 'price_mismatch');
+      payError.textContent = changed
+        ? 'Something in your bag has changed — please refresh the page and try again ⋆'
+        : 'Online payment is coming soon ⋆ Please message me on WhatsApp to place your order for now.';
       payError.style.display = 'block';
       payBtn.disabled = false;
       payBtn.textContent = 'Pay & Place Order';
@@ -3473,6 +3521,7 @@
       linkSentTo = '';
       showLoggedIn(user.displayName || user.email, user.email || '');
       loadUserData(user.uid);
+      setTimeout(recoverPendingPayment, 1500);
       if(pendingSignUp){ signUpUid = user.uid; pendingSignUp = false; }
       if(user.email && !user.emailVerified){
         if(isNewSignUp()) showVerify();
