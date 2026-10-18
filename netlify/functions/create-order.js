@@ -61,8 +61,8 @@ exports.handler = async function (event) {
   if (event.httpMethod !== 'POST') return json(405, { error: 'method_not_allowed' });
 
   // The key ID is public (it is also in the shop page), so it lives here. Only the SECRET is a Netlify setting.
-  // At launch: replace this with your live key ID (and the one in the shop page).
-  const keyId = process.env.RAZORPAY_KEY_ID || 'rzp_test_ToyVGdhsgM8vuY';
+  // LIVE key ID (also set in the shop page). Setting RAZORPAY_KEY_ID in Netlify would override this.
+  const keyId = process.env.RAZORPAY_KEY_ID || 'rzp_live_TpLdbzwdBLlkGO';
   const keySecret = process.env.RAZORPAY_KEY_SECRET;
   const token = notionToken();
   if (!keyId || !keySecret || !token) return json(500, { error: 'not_configured' });

@@ -11,7 +11,7 @@ const json = (statusCode, obj) => ({ statusCode, headers: { 'Content-Type': 'app
 
 exports.handler = async function (event) {
   if (event.httpMethod !== 'POST') return json(405, { error: 'method_not_allowed' });
-  const keyId = process.env.RAZORPAY_KEY_ID || 'rzp_test_ToyVGdhsgM8vuY'; // same public key ID as create-order.js
+  const keyId = process.env.RAZORPAY_KEY_ID || 'rzp_live_TpLdbzwdBLlkGO'; // same public key ID as create-order.js
   const keySecret = process.env.RAZORPAY_KEY_SECRET;
   if (!keySecret) return json(500, { error: 'not_configured' });
   let body; try { body = JSON.parse(event.body || '{}'); } catch (e) { return json(400, { error: 'bad_request' }); }
