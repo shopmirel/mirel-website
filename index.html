@@ -229,6 +229,30 @@
 
   .confirm-backdrop{ position:fixed; inset:0; background:rgba(36,20,23,0.45); z-index:490; opacity:0; pointer-events:none; transition:opacity .25s ease; }
   .confirm-backdrop.open{ opacity:1; pointer-events:auto; }
+  .pay-pop-backdrop{ position:fixed; inset:0; background:rgba(36,20,23,0.45); z-index:520; opacity:0; pointer-events:none; transition:opacity .25s ease; display:flex; align-items:center; justify-content:center; padding:20px; }
+  .pay-pop-backdrop.open{ opacity:1; pointer-events:auto; }
+  .pay-pop{ position:relative; width:min(360px,100%); background:var(--cream); border-radius:26px; padding:40px 28px 30px; text-align:center; box-shadow:0 20px 50px rgba(36,20,23,0.3); }
+  .pay-pop-x{ position:absolute; top:14px; right:14px; width:34px; height:34px; border-radius:50%; border:1px solid var(--line); background:#fff; font-size:20px; line-height:1; cursor:pointer; color:var(--ink); }
+  .pay-pop .serif{ font-family:'Cormorant Garamond',serif; font-style:italic; font-size:27px; margin-bottom:10px; color:var(--ink); }
+  .pay-pop p{ font-size:13.5px; line-height:1.7; color:var(--ink-soft); }
+  .order-detail{ position:fixed; inset:0; z-index:420; background:var(--cream); overflow-y:auto; transform:translateY(100%); transition:transform .4s ease; }
+  .order-detail.open{ transform:translateY(0); }
+  .order-detail-head{ display:flex; justify-content:space-between; align-items:center; padding:26px 6% 16px; border-bottom:1px solid var(--line); position:sticky; top:0; background:var(--cream); z-index:2; }
+  .order-detail-head .serif{ font-size:30px; }
+  .order-detail-head button{ background:none; border:none; font-size:30px; cursor:pointer; color:var(--ink); }
+  .order-detail-body{ max-width:760px; margin:0 auto; padding:26px 6% 90px; display:flex; flex-direction:column; gap:20px; }
+  .od-card{ background:#fff; border-radius:22px; padding:22px; box-shadow:0 10px 28px rgba(143,97,105,0.14); }
+  .od-title{ font-size:10.5px; letter-spacing:2px; text-transform:uppercase; color:var(--accent); margin-bottom:12px; }
+  .od-row{ display:flex; justify-content:space-between; gap:14px; font-size:13.5px; padding:5px 0; color:var(--ink-soft); }
+  .od-row b{ color:var(--ink); font-weight:600; text-align:right; }
+  .od-item{ display:flex; gap:14px; align-items:center; padding:8px; margin:0 -8px; border-radius:16px; cursor:pointer; transition:background .2s ease; }
+  .od-item:hover{ background:rgba(185,143,151,0.12); }
+  .od-item img, .od-item .od-ph{ width:72px; height:72px; border-radius:16px; object-fit:cover; flex-shrink:0; }
+  .od-steps{ display:flex; gap:8px; flex-wrap:wrap; }
+  .od-step{ padding:7px 14px; border-radius:30px; border:1px solid var(--line); font-size:11px; letter-spacing:1.2px; text-transform:uppercase; color:var(--ink-soft); }
+  .od-step.on{ background:var(--ink); color:#fff7f2; border-color:var(--ink); }
+  .order-status-btn:disabled{ opacity:.4; cursor:default; }
+  .order-status-btn.active:disabled{ opacity:1; }
   .confirm-box{ position:fixed; top:50%; left:50%; transform:translate(-50%,-46%); width:min(360px,86vw); background:var(--cream); border-radius:14px; padding:30px 26px 24px; z-index:500; box-shadow:0 20px 50px rgba(36,20,23,0.3); opacity:0; pointer-events:none; transition:opacity .25s ease, transform .25s ease; text-align:center; }
   .confirm-box.open{ opacity:1; pointer-events:auto; transform:translate(-50%,-50%); }
   .confirm-box .serif{ font-family:'Cormorant Garamond',serif; font-style:italic; font-size:19px; line-height:1.5; color:var(--ink); margin-bottom:22px; }
@@ -555,6 +579,17 @@
 </style>
 </head>
 <body>
+<div class="pay-pop-backdrop" id="payPopBackdrop">
+  <div class="pay-pop" role="dialog" aria-labelledby="payPopTitle">
+    <button class="pay-pop-x" id="payPopX" aria-label="Close">&times;</button>
+    <div class="serif" id="payPopTitle">Payment received ⋆</div>
+    <p>Your payment went through and your order is placed. You can see it any time in My Orders.</p>
+  </div>
+</div>
+<div class="order-detail" id="orderDetail">
+  <div class="order-detail-head"><div class="serif">Order details</div><button id="orderDetailClose" aria-label="Close">&times;</button></div>
+  <div class="order-detail-body" id="orderDetailBody"></div>
+</div>
 <div id="toast" style="position:fixed; bottom:24px; left:50%; transform:translateX(-50%) translateY(20px); background:var(--ink); color:var(--cream); padding:12px 22px; border-radius:30px; font-family:'Montserrat',sans-serif; font-size:12px; letter-spacing:0.5px; opacity:0; pointer-events:none; transition:opacity .3s ease, transform .3s ease; z-index:999;"></div>
 
 <nav id="nav">
@@ -1355,7 +1390,7 @@
           const items = (o.items || []).map(i => `${escHtml(i.name)} (₹${escHtml(i.price)})`).join(', ');
           const when = o.timestamp ? new Date(o.timestamp).toLocaleString() : '';
           const status = o.status || 'ordered';
-          const statusBtns = ORDER_STATUSES.map(s => `<button type="button" class="order-status-btn${s.key === status ? ' active' : ''}" data-order="${o.key}" data-user="${escHtml(o.userId || '')}" data-status="${s.key}">${s.label}</button>`).join('') + `<button type="button" class="order-del-btn" data-order="${escHtml(o.key)}" data-user="${escHtml(o.userId || '')}">Delete</button>`;
+          const statusBtns = ORDER_STATUSES.map(s => `<button type="button" class="order-status-btn${s.key === status ? ' active' : ''}" data-order="${o.key}" data-user="${escHtml(o.userId || '')}" data-status="${s.key}"${status === 'delivered' ? ' disabled title="Delivered is final — it can’t be changed back"' : ''}>${s.label}</button>`).join('') + `<button type="button" class="order-del-btn" data-order="${escHtml(o.key)}" data-user="${escHtml(o.userId || '')}">Delete</button>`;
           return `<div data-card="${escHtml(o.key)}" style="position:relative; border:1px solid var(--line); border-radius:14px; padding:18px; background:#fff;">
             ${o.addedByAdmin ? '<span class="by-me-dot" title="Added by you" aria-label="Added by you"></span>' : ''}
             ${(o.paid && o.razorpayOrderId) ? `<div class="paychk" data-rzp="${escHtml(o.razorpayOrderId)}" data-amt="${Math.round((o.total || 0) * 100)}" style="font-size:11px; letter-spacing:1px; margin-bottom:8px; color:var(--ink-soft);">Checking payment…</div>` : ''}
@@ -1393,11 +1428,13 @@
           });
         });
         body.querySelectorAll('.order-status-btn').forEach(btn => {
-          btn.addEventListener('click', () => {
+          btn.addEventListener('click', async () => {
             const { order, user, status } = btn.dataset;
+            if(status === 'delivered' && !(await askConfirm('Mark this order as delivered? This is final — it can’t be changed back.', 'Yes, delivered', 'Not yet'))) return;
             setOrderStatus(order, user || null, status);
             btn.parentElement.querySelectorAll('.order-status-btn').forEach(b => b.classList.remove('active'));
             btn.classList.add('active');
+            if(status === 'delivered') btn.parentElement.querySelectorAll('.order-status-btn').forEach(b => { b.disabled = true; b.title = 'Delivered is final — it can’t be changed back'; });
           });
         });
       })
@@ -1502,7 +1539,7 @@
       logOrder(p.items, p.total, p.customer, undefined, p.delivery, { paymentId: '', orderId: p.orderId });
       if(!p.buyNow){ bag.clear(); renderBag(); }
       localStorage.removeItem('mirelPendingPay');
-      toast('Your payment went through — your order is placed ⋆');
+      document.getElementById('payPopBackdrop').classList.add('open');
     } catch(_){}
   }
 
@@ -2637,7 +2674,7 @@
   }
 
   // ---- Razorpay: real key ID, safe to expose in frontend code ----
-  const RAZORPAY_KEY_ID = "rzp_test_ToyVGdhsgM8vuY"; // public test key ID (the secret key lives only in Netlify). Swap for the live key ID at launch.
+  const RAZORPAY_KEY_ID = "rzp_live_TpLdbzwdBLlkGO"; // public LIVE key ID (the secret key lives only in Netlify)
 
   document.getElementById('checkoutForm').addEventListener('submit', async (e) => {
     e.preventDefault();
@@ -2917,6 +2954,71 @@
     for(const t of tries){ if(t && liveImages[t]) return liveImages[t]; }
     return '';
   }
+  (function(){
+    const bd = document.getElementById('payPopBackdrop');
+    document.getElementById('payPopX').addEventListener('click', () => bd.classList.remove('open'));
+    bd.addEventListener('click', e => { if(e.target === bd) bd.classList.remove('open'); });
+  })();
+
+  // Full-screen detail for one order: pieces (tap to open the product page), payment, delivery, status.
+  function openOrderDetail(o){
+    const c = o.customer || {};
+    const status = o.status || 'ordered';
+    const when = o.timestamp ? new Date(o.timestamp).toLocaleString('en-IN', {day:'numeric', month:'short', year:'numeric', hour:'numeric', minute:'2-digit'}) : '';
+    const whenShort = fmtDate(o.timestamp);
+    const steps = ORDER_STATUSES.map(s => `<span class="od-step${s.key === status ? ' on' : ''}">${s.label}</span>`).join('');
+    const names = (o.items || []).map(i => i.name).join(', ');
+    const items = (o.items || []).map((it, i) => {
+      const photo = orderImg(it);
+      const tile = photo ? `<img src="${escHtml(photo)}" alt="">` : `<div class="od-ph" style="background:rgba(185,143,151,0.28);"></div>`;
+      const note = status === 'delivered' ? `<button class="bag-item-move" data-od-note="${i}" style="display:block; margin-top:8px;">Leave a note ⋆</button>` : '';
+      return `<div class="od-item" data-od-item="${i}" tabindex="0">${tile}<div style="flex:1;"><div class="name">${escHtml(it.name)}</div><div class="price">₹${inr(it.price)}</div><div style="font-size:11px; color:var(--accent); margin-top:4px;">View this piece →</div>${note}</div></div>`;
+    }).join('');
+    const addr = [c.door, c.address, c.landmark, c.city, c.state, c.pin].filter(Boolean).map(escHtml).join(', ');
+    const fee = typeof o.delivery === 'number' ? (o.delivery === 0 ? 'Free' : '₹' + inr(o.delivery)) : '';
+    const change = status === 'ordered'
+      ? `<a href="${escHtml(waUrl("Hi! I'd like to change or cancel my order: " + names + " (ordered " + whenShort + ")."))}" target="_blank" rel="noopener" style="display:inline-block; font-size:13px; color:var(--accent); text-decoration:underline;">Need to change or cancel? Message me</a>` : '';
+    const body = document.getElementById('orderDetailBody');
+    body.innerHTML = `
+      <div class="od-card"><div class="od-title">Your pieces</div>${items}</div>
+      <div class="od-card"><div class="od-title">Payment</div>
+        <div class="od-row"><span>Status</span><b>${o.paid ? 'Paid online ✓' : 'Payment pending'}</b></div>
+        ${fee ? `<div class="od-row"><span>Delivery</span><b>${fee}</b></div>` : ''}
+        <div class="od-row"><span>Total</span><b>₹${inr(o.total)}</b></div>
+        ${o.razorpayPaymentId ? `<div class="od-row"><span>Payment reference</span><b style="font-size:12px; word-break:break-all;">${escHtml(o.razorpayPaymentId)}</b></div>` : ''}
+      </div>
+      <div class="od-card"><div class="od-title">Delivery</div>
+        <div class="od-row"><span>To</span><b>${escHtml(c.name || '')}</b></div>
+        ${c.phone ? `<div class="od-row"><span>Phone</span><b>${escHtml(c.phone)}</b></div>` : ''}
+        <div class="od-row"><span>Address</span><b style="max-width:70%;">${addr}</b></div>
+      </div>
+      <div class="od-card"><div class="od-title">Order</div>
+        <div class="od-row"><span>Order number</span><b>${escHtml(String(o.key).replace(/^order_/, '').slice(-8).toUpperCase())}</b></div>
+        <div class="od-row"><span>Placed</span><b>${escHtml(when)}</b></div>
+        ${o.deliveredAt ? `<div class="od-row"><span>Delivered</span><b>${escHtml(fmtDate(o.deliveredAt))}</b></div>` : ''}
+        <div class="od-steps" style="margin-top:12px;">${steps}</div>
+        ${change ? `<div style="margin-top:16px;">${change}</div>` : ''}
+      </div>`;
+    body.querySelectorAll('[data-od-item]').forEach(el => el.addEventListener('click', (e) => {
+      if(e.target.closest('button')) return;
+      const it = (o.items || [])[Number(el.dataset.odItem)];
+      const base = String((it && (it.product || productBase(it.name))) || '').trim().toLowerCase();
+      const card = [...document.querySelectorAll('.card')].find(cd => cd.querySelector('h3').textContent.trim().toLowerCase() === base);
+      if(!card){ toast("That piece isn't on the shelf right now ⋆"); return; }
+      document.getElementById('orderDetail').classList.remove('open');
+      document.getElementById('ordersClose').click();
+      showProduct(card);
+    }));
+    body.querySelectorAll('[data-od-note]').forEach(b => b.addEventListener('click', () => {
+      const it = (o.items || [])[Number(b.dataset.odNote)];
+      document.getElementById('orderDetail').classList.remove('open');
+      openNote(o.key, (it && (it.product || productBase(it.name))) || '');
+    }));
+    document.getElementById('orderDetail').classList.add('open');
+    document.getElementById('orderDetail').scrollTop = 0;
+  }
+  document.getElementById('orderDetailClose').addEventListener('click', () => document.getElementById('orderDetail').classList.remove('open'));
+
   function renderMyOrders(){
     const body = document.getElementById('ordersBody');
     if(!currentUser){ body.innerHTML = '<div class="bag-empty">Sign in to see your orders ⋆</div>'; return; }
@@ -2936,20 +3038,21 @@
           const tile = photo
             ? `<img src="${escHtml(photo)}" alt="" style="width:64px;height:64px;object-fit:cover;border-radius:16px;flex-shrink:0;box-shadow:0 6px 14px rgba(143,97,105,0.22);">`
             : `<div aria-hidden="true" style="width:64px;height:64px;border-radius:16px;flex-shrink:0;background:rgba(185,143,151,0.28);display:flex;align-items:center;justify-content:center;font-family:'Cormorant Garamond',serif;font-style:italic;font-size:26px;color:var(--accent);">${escHtml(String(it.name || '?').charAt(0).toUpperCase())}</div>`;
-          cards.push(`<div class="bag-item" style="align-items:flex-start;">
+          cards.push(`<div class="bag-item" data-open-order="${escHtml(o.key)}" style="align-items:flex-start; cursor:pointer;">
             ${tile}
             <div style="flex:1;">
               <div class="name">${escHtml(it.name)}</div>
               <div class="price">₹${inr(it.price)}</div>
               <div style="font-size:11px; color:var(--ink-soft); margin-top:4px;">Ordered ${when} · Order total ₹${inr(o.total)}</div>
               <div class="order-status-badge${status === 'delivered' ? ' delivered' : ''}">${statusText}</div>
-              ${status === 'ordered' ? `<a href="${escHtml(waUrl('Hi! I\'d like to change or cancel my order: ' + it.name + ' (ordered ' + when + ').'))}" target="_blank" rel="noopener" style="display:inline-block; margin-top:10px; font-family:'Cormorant Garamond',serif; font-style:italic; font-size:14px; color:var(--ink-soft); text-decoration:underline;">Need to change or cancel? Message me</a>` : ''}
+              <div style="font-size:11px; color:var(--accent); margin-top:8px;">View details →</div>
               ${status === 'delivered' ? `<button class="bag-item-move" data-note-order="${escHtml(o.key)}" data-note-name="${escHtml(it.product || productBase(it.name))}" style="display:block; margin-top:10px;">Leave a note ⋆</button>` : ''}
             </div>
           </div>`);
         });
       });
       body.innerHTML = cards.join('');
+      body.querySelectorAll('[data-open-order]').forEach(el => el.addEventListener('click', (e) => { if(e.target.closest('button,a')) return; const o = rows.find(r => r.key === el.dataset.openOrder); if(o) openOrderDetail(o); }));
       body.querySelectorAll('[data-note-order]').forEach(btn => btn.addEventListener('click', () => openNote(btn.dataset.noteOrder, btn.dataset.noteName)));
     }).catch(() => { body.innerHTML = '<div class="bag-empty">Couldn\'t load your orders right now ⋆</div>'; });
   }
@@ -3302,11 +3405,25 @@
     const hint = t => `<p style="font-family:'Cormorant Garamond',serif; font-style:italic; font-size:14px; color:var(--ink-soft);">${t}</p>`;
     if(!currentUser || currentUser.email !== ADMIN_EMAIL){ body.innerHTML = hint('Sign in with your admin account to view exchange requests ⋆'); return; }
     body.innerHTML = hint('Loading…');
-    db.ref('exchangeRequests').orderByChild('status').equalTo('requested').once('value').then(snap => {
-      const reqs = [];
-      snap.forEach(c => { reqs.push(Object.assign({ key: c.key }, c.val())); });
+    db.ref('exchangeRequests').once('value').then(snap => {
+      const all = [];
+      snap.forEach(c => { all.push(Object.assign({ key: c.key }, c.val())); });
+      const reqs = all.filter(r => r.status === 'requested');
+      const decided = all.filter(r => r.status === 'approved' || r.status === 'declined').sort((a, b) => (b.decidedAt || '').localeCompare(a.decidedAt || ''));
       reqs.sort((a, b) => (a.requestedAt || '').localeCompare(b.requestedAt || ''));
-      if(!reqs.length){ body.innerHTML = hint('No exchange requests waiting ⋆'); return; }
+      // Your permanent record: every approved and declined exchange stays here.
+      const decidedHtml = !decided.length ? '' : `<div style="margin-top:38px;"><div class="serif" style="font-size:24px; margin-bottom:4px;">Decided</div><div style="font-size:12px; color:var(--ink-soft); margin-bottom:16px;">Your record of every approved and declined exchange.</div><div style="display:grid; grid-template-columns:repeat(auto-fill,minmax(300px,1fr)); gap:18px;">` + decided.map(r => {
+        const ok = r.status === 'approved';
+        return `<div style="border:1px solid var(--line); border-radius:14px; padding:18px; background:#fff;">
+          <div class="name" style="font-size:15px; margin-bottom:4px;">${escHtml(r.name || 'Customer')} · ${escHtml(r.item)}</div>
+          <div class="price" style="margin-bottom:2px;">${escHtml(r.phone || 'No phone saved')} · ${escHtml(r.email || '')}</div>
+          <div class="price" style="opacity:.7; margin-bottom:8px;">Ordered ${escHtml(fmtDate(r.orderTimestamp))} · Requested ${escHtml(fmtDate(r.requestedAt))}</div>
+          <div style="font-size:10.5px; letter-spacing:1.4px; text-transform:uppercase; color:var(--accent); margin-bottom:8px;">${escHtml(EXCH_REASONS[r.reason] || r.reason || '')}</div>
+          <div style="font-weight:600; margin-bottom:6px; color:${ok ? '#5f8a5a' : 'var(--error)'};">${ok ? 'Approved' : 'Declined — ' + escHtml(EXCH_DECLINES[r.replyKey] || '')} · ${escHtml(fmtDate(r.decidedAt))}</div>
+          <div class="exch-msg ${ok ? 'approved' : 'declined'}">${escHtml(r.reply || '')}</div>
+        </div>`;
+      }).join('') + `</div></div>`;
+      if(!reqs.length){ body.innerHTML = hint('No exchange requests waiting ⋆') + decidedHtml; return; }
       body.innerHTML = `<div style="display:grid; grid-template-columns:repeat(auto-fill,minmax(300px,1fr)); gap:18px;">` + reqs.map(r => {
         const days = (r.deliveredAt && r.requestedAt) ? Math.floor((Date.parse(r.requestedAt) - Date.parse(r.deliveredAt)) / 86400000) : null;
         const timing = days === null ? '' : (days > 7
@@ -3326,7 +3443,7 @@
           <div style="font-size:10px; letter-spacing:1.4px; text-transform:uppercase; color:var(--ink-soft); opacity:.7; margin-bottom:6px;">Or decline:</div>
           <div class="order-status-row">${dec}</div>
         </div>`;
-      }).join('') + `</div>`;
+      }).join('') + `</div>` + decidedHtml;
       body.querySelectorAll('.exch-photos img').forEach(img => img.addEventListener('click', () => img.classList.toggle('big')));
       body.querySelectorAll('[data-reply]').forEach(b => b.addEventListener('click', async () => {
         const req = reqs.find(r => r.key === b.dataset.key);
